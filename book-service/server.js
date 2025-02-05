@@ -65,11 +65,12 @@ const db = pgp({
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || 'books_db',
   user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres'
+  password: process.env.DB_PASSWORD || 'postgres',
 });
 
 // Créer la table books si pas existante
-db.none(`
+db.none(
+  `
   CREATE TABLE IF NOT EXISTS books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -78,9 +79,12 @@ db.none(`
     genre VARCHAR(100),
     created_at TIMESTAMP DEFAULT NOW()
   );
-`).then(() => {
-  console.log("Table 'books' créée (ou déjà existante).");
-}).catch(console.error);
+`
+)
+  .then(() => {
+    console.log("Table 'books' créée (ou déjà existante).");
+  })
+  .catch(console.error);
 
 // Routes
 app.get('/books', authMiddleware, async (req, res) => {
