@@ -12,6 +12,43 @@ function authMiddleware(req, res, next) {
   const authHeader = req.headers['authorization'];
   if (!authHeader) return res.status(401).json({ error: 'Missing token' });
 
+app.get('/', (req, res) => {
+  res.send('Hello, Worldd! 🌍');
+});
+
+let books = []; // Temporary in-memory data
+
+// Get all books
+app.get('/api/books', (req, res) => {
+  res.json(books);
+});
+
+// Add a book
+app.post('/api/books', (req, res) => {
+  const book = req.body;
+  books.push(book);
+  res.status(201).json({ message: 'Book added', book });
+});
+
+// Update a book
+app.put('/api/books/:id', (req, res) => {
+  const { id } = req.params;
+  const updatedBook = req.body;
+  books = books.map((b, index) => (index == id ? updatedBook : b));
+  res.json({ message: 'Book updated', updatedBook });
+});
+
+// Delete a book
+app.delete('/api/books/:id', (req, res) => {
+  const { id } = req.params;
+  books = books.filter((_, index) => index != id);
+  res.json({ message: 'Book deleted' });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+=======
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secretKey');
