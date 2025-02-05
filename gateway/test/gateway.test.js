@@ -6,17 +6,14 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
 
 // Mock Proxies (Instead of calling real services, we simulate responses)
-app.use(
-  "/auth",
-  (req, res) => res.json({ message: "Auth Service Proxy Working" })
+app.use("/auth", (req, res) =>
+  res.json({ message: "Auth Service Proxy Working" }),
 );
-app.use(
-  "/books",
-  (req, res) => res.json({ message: "Books Service Proxy Working" })
+app.use("/books", (req, res) =>
+  res.json({ message: "Books Service Proxy Working" }),
 );
-app.use(
-  "/movies",
-  (req, res) => res.json({ message: "Movies Service Proxy Working" })
+app.use("/movies", (req, res) =>
+  res.json({ message: "Movies Service Proxy Working" }),
 );
 
 // Test Suite for API Gateway

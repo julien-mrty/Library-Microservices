@@ -1,9 +1,9 @@
-const request = require("supertest");
-const app = require("../book-service"); // ✅ Now this works!
+const request = require('supertest');
+const app = require('../book-service'); // ✅ Now this works!
 
-describe("API Health Check", () => {
-  it("should return 200 OK", async () => {
-    const res = await request(app).get("/");
+describe('API Health Check', () => {
+  it('should return 200 OK', async () => {
+    const res = await request(app).get('/');
     expect(res.status).toBe(200);
   });
 });
