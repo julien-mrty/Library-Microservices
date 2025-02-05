@@ -3,20 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "start": "node server.js",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare": "husky"
+    "format:check": "prettier --check ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.2"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "prettier": "^3.4.2"
+    "jest": "^29.7.0",
+    "prettier": "^3.4.2",
+    "supertest": "^7.0.0"
   }
 }

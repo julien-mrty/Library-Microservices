@@ -1,6 +1,11 @@
 {
   "scripts": {
-  "prepare": "husky"
+    "prepare": "husky",
+    "test": "npm run test:services",
+    "test:services": "npm run test:auth && npm run test:movies && npm run test:book",
+    "test:auth": "cd auth-service && npm test",
+    "test:movies": "cd movie-service && npm test",
+    "test:book": "cd book-service && npm test"
   },
   "devDependencies": {
     "husky": "^9.1.7"
