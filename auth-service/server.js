@@ -5,6 +5,11 @@ const port = 3000;
 app.use(express.json()); // Middleware to parse JSON requests
 
 
+app.get("/", (req, res) => {
+  res.send("Hello, World! 🌍");
+});
+
+
 let books = []; // Temporary in-memory data
 
 // Get all books
