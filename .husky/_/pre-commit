@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "Running Prettier on root directory..."
+npx prettier --write .
 echo "Running Prettier on auth-service..."
 cd auth-service && npx prettier --write .
 echo "Running Prettier on book-service..."
