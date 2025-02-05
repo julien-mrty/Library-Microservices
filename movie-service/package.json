@@ -11,5 +11,8 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
   }
 }
