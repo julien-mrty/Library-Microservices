@@ -42,6 +42,7 @@ git config core.hooksPath .husky
 Now, Prettier will automatically format your code before every commit.
 
 # To run the PostgreSQL database :
+
 Run PostgreSQL in Docker
 docker run --name postgres-dev -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydatabase -p 5432:5432 -d postgres
 

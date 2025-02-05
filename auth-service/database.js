@@ -1,17 +1,17 @@
-const { Pool, Client } = require("pg");
-require("dotenv").config();
+const { Pool, Client } = require('pg');
+require('dotenv').config();
 
 const connectionString = process.env.DATABASE_URL;
 
 // Create a temporary client to ensure the database exists (optional)
 const createDatabaseIfNotExists = async () => {
   const tempClient = new Client({
-    connectionString: connectionString.replace(/\/[^/]+$/, "/postgres"), // Connect to default "postgres" DB
+    connectionString: connectionString.replace(/\/[^/]+$/, '/postgres'), // Connect to default "postgres" DB
   });
 
   try {
     await tempClient.connect();
-    const dbName = connectionString.split("/").pop();
+    const dbName = connectionString.split('/').pop();
 
     const dbExists = await tempClient.query(
       `SELECT 1 FROM pg_database WHERE datname = $1`,
@@ -26,7 +26,7 @@ const createDatabaseIfNotExists = async () => {
       console.log(`Database "${dbName}" already exists.`);
     }
   } catch (error) {
-    console.error("Error checking/creating database:", error);
+    console.error('Error checking/creating database:', error);
   } finally {
     await tempClient.end();
   }
@@ -43,9 +43,9 @@ const createUsersTable = async (pool) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log("Users table is ready.");
+    console.log('Users table is ready.');
   } catch (error) {
-    console.error("Error creating users table:", error);
+    console.error('Error creating users table:', error);
   }
 };
 
