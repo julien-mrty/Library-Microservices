@@ -1,4 +1,4 @@
-name: Project pipeline
+name: Prettier Check
 
 on:
   push:
@@ -26,22 +26,3 @@ jobs:
 
       - name: Check Prettier formatting
         run: npx prettier --check .
-
-  test:
-    runs-on: ubuntu-latest
-    needs: prettier # Ensure Prettier check passes before running tests
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
