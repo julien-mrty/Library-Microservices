@@ -1,5 +1,5 @@
 {
-  "name": "movie-service",
+  "name": "gateway",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -10,14 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "prettier": "^3.4.2"
-    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1",
-    "pg-promise": "^11.10.2"
+    "http-proxy-middleware": "^3.0.3"
   }
 }

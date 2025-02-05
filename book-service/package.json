@@ -15,5 +15,10 @@
   },
   "devDependencies": {
     "prettier": "^3.4.2"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "pg-promise": "^11.10.2"
   }
 }
