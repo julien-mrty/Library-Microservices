@@ -15,7 +15,6 @@ node server.js
 You should see:
 Server is running on http://localhost:3000
 
-
 Add Nodemon for Auto-Restart
 To avoid restarting the server manually, install nodemon:
 
@@ -23,3 +22,21 @@ npm install -g nodemon
 
 Run the server with:
 nodemon server.js
+
+## Linter
+
+Install Prettier
+npm install --save-dev prettier
+
+### Enforce Prettier Before Commit
+
+To automatically format code before committing, install Husky:
+
+npm install --save-dev husky
+npx husky init
+
+Then, add a pre-commit hook:
+npx husky add .husky/pre-commit "npx prettier --write ."
+git config core.hooksPath .husky
+
+Now, Prettier will automatically format your code before every commit.
