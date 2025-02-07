@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-db
+spec:
+  selector:
+    app: book-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

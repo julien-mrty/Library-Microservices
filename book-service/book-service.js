@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json()); // Middleware to parse JSON requests
 
 app.get('/', (req, res) => {
-  res.send('Hello, World! 🌍');
+  res.send('📚 Book Service is Running!');
 });
 
 let books = []; // Temporary in-memory data
