@@ -24,7 +24,7 @@ services:
       AUTH_PORT: 4000
       JWT_SECRET: superSecret
     ports:
-      - "4000:4000"
+      - "4000:3000"   # côté host :4000 -> côté conteneur :3000
     depends_on:
       - auth-db
 
@@ -42,7 +42,7 @@ services:
       - "5434:5432"
 
   books-service:
-    build: ./books-service
+    build: ./book-service
     container_name: books-service
     environment:
       DB_HOST: books-db
@@ -53,7 +53,7 @@ services:
       BOOKS_PORT: 5000
       JWT_SECRET: superSecret
     ports:
-      - "5000:5000"
+      - "5000:3001"
     depends_on:
       - books-db
 
@@ -71,7 +71,7 @@ services:
       - "5435:5432"
 
   movies-service:
-    build: ./movies-service
+    build: ./movie-service
     container_name: movies-service
     environment:
       DB_HOST: movies-db
@@ -86,15 +86,4 @@ services:
     depends_on:
       - movies-db
 
-  # ====================================================
-  # API Gateway (optionnel)
-  # ====================================================
-  gateway:
-    build: ./gateway
-    container_name: gateway
-    ports:
-      - "3000:3000"
-    depends_on:
-      - auth-service
-      - books-service
-      - movies-service
+
