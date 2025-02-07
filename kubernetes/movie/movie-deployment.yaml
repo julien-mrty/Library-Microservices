@@ -15,22 +15,22 @@ spec:
         app: movie-service
     spec:
       containers:
-      - name: movie-service
-        image: 77771603/movie-service:latest
-        ports:
-        - containerPort: 6000
-        env:
-          - name: DB_HOST
-            value: "movies-db"
-          - name: DB_PORT
-            value: "5432"
-          - name: DB_USER
-            value: "postgres"
-          - name: DB_PASSWORD
-            value: "postgres"
-          - name: DB_NAME
-            value: "movies_db"
-          - name: JWT_SECRET
-            value: "superSecret"
-          - name: MOVIES_PORT
-            value: "6000"
+        - name: movie-service
+          image: 77771603/movie-service:latest
+          ports:
+            - containerPort: 6000
+          env:
+            - name: DB_HOST
+              value: "movies-db"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: DB_NAME
+              value: "movies_db"
+            - name: JWT_SECRET
+              value: "superSecret"
+            - name: MOVIES_PORT
+              value: "6000"

@@ -15,21 +15,20 @@ spec:
         app: auth-service
     spec:
       containers:
-      - name: auth-service
-        image: 77771603/auth-service:latest
-        ports:
-        - containerPort: 3000
-        env:
-          - name: DB_HOST
-            value: "auth-db"
-          - name: DB_PORT
-            value: "5432"
-          - name: DB_USER
-            value: "postgres"
-          - name: DB_PASSWORD
-            value: "postgres"
-          - name: DB_NAME
-            value: "auth_db"
-          - name: JWT_SECRET
-            value: "superSecret"
-
+        - name: auth-service
+          image: 77771603/auth-service:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_HOST
+              value: "auth-db"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: DB_NAME
+              value: "auth_db"
+            - name: JWT_SECRET
+              value: "superSecret"

@@ -24,7 +24,7 @@ services:
       AUTH_PORT: 4000
       JWT_SECRET: superSecret
     ports:
-      - "4000:3000"   # côté host :4000 -> côté conteneur :3000
+      - "4000:3000" # côté host :4000 -> côté conteneur :3000
     depends_on:
       - auth-db
 
@@ -85,5 +85,3 @@ services:
       - "6000:6000"
     depends_on:
       - movies-db
-
-

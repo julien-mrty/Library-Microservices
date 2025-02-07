@@ -6,7 +6,7 @@ spec:
   selector:
     app: auth-service
   ports:
-    - port: 3000         # Le port du service à l'intérieur du cluster
-      targetPort: 3000   # Le containerPort
+    - port: 3000 # Le port du service à l'intérieur du cluster
+      targetPort: 3000 # Le containerPort
       # nodePort: 30000  # <-- si tu veux un NodePort
-  type: ClusterIP        # Ou NodePort/LoadBalancer selon ton environnement
+  type: ClusterIP # Ou NodePort/LoadBalancer selon ton environnement

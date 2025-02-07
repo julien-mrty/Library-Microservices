@@ -26,6 +26,7 @@ Ce dossier **`kubernetes/`** contient les fichiers de configuration nécessaires
 ```
 
 ## 🚀 **Prérequis**
+
 Avant de déployer l'application sur Kubernetes, assurez-vous d'avoir :
 
 - **Minikube** installé → [Documentation officielle](https://minikube.sigs.k8s.io/docs/)
@@ -52,6 +53,7 @@ Avant de déployer l'application sur Kubernetes, assurez-vous d'avoir :
 Déployons chaque service individuellement :
 
 ### 1️⃣ **Déploiement du service d'authentification**
+
 ```bash
 kubectl apply -f kubernetes/auth/auth-deployment.yaml
 kubectl apply -f kubernetes/auth/auth-service.yaml
@@ -60,6 +62,7 @@ kubectl apply -f kubernetes/auth/auth-db-deployment.yaml
 ```
 
 ### 2️⃣ **Déploiement du service de gestion des livres**
+
 ```bash
 kubectl apply -f kubernetes/book/book-deployment.yaml
 kubectl apply -f kubernetes/book/book-service.yaml
@@ -68,6 +71,7 @@ kubectl apply -f kubernetes/book/book-db-service.yaml
 ```
 
 ### 3️⃣ **Déploiement du service de gestion des films**
+
 ```bash
 kubectl apply -f kubernetes/movie/movie-deployment.yaml
 kubectl apply -f kubernetes/movie/movie-service.yaml
@@ -87,20 +91,25 @@ kubectl apply -f kubernetes/movie/movie-db-service.yaml
    ```
 
 ## 🔄 **Exposer un service localement (port-forwarding)**
+
 Si les services sont en `ClusterIP`, ils ne sont pas accessibles directement depuis votre machine. Vous pouvez utiliser le `port-forward` pour tester un service.
 
 Exemple pour accéder au service **Auth** :
+
 ```bash
 kubectl port-forward svc/auth-service 4000:3000
 kubectl port-forward svc/book-service 5000:3001
 kubectl port-forward svc/movie-service 6000:6000
 ```
+
 Ensuite, ouvrez **Postman** ou un navigateur et accédez à :
+
 ```
 http://localhost:4000
 ```
 
 ## **Pour un accès plus direct, tu peux mettre type: NodePort. Par exemple, sur auth-service.yaml :**
+
 ```bash
 apiVersion: v1
 kind: Service
@@ -115,6 +124,7 @@ spec:
       targetPort: 3000
       nodePort: 30090    # Port random entre 30000-32767
 ```
+
 Tu pourras alors taper http://**<NodeIP>**:30090.
 
 En production, on utilise souvent un Ingress + LoadBalancer. Tu peux configurer un Ingress Controller (Nginx, Traefik, etc.) pour router /auth → auth-service, /books → book-service, etc.
@@ -142,13 +152,16 @@ Si vous avez une erreur **"No connection could be made"** ou **"Cluster unreacha
    ```
 
 ## 🛑 **Arrêter et supprimer le déploiement**
+
 Si vous souhaitez arrêter l’environnement Kubernetes et supprimer tous les services :
+
 ```bash
 kubectl delete -f kubernetes/
 minikube stop
 ```
 
 ## 🎯 **Résumé**
+
 - 📌 **Lancer Minikube** → `minikube start`
 - 📌 **Déployer l’application** → `kubectl apply -f kubernetes/`
 - 📌 **Vérifier les services et pods** → `kubectl get pods`, `kubectl get svc`
@@ -156,4 +169,3 @@ minikube stop
 - 📌 **Arrêter le cluster** → `minikube stop`
 
 Avec ces instructions, vous pouvez facilement **démarrer, gérer et tester** votre application sur Kubernetes ! 🚀
-
