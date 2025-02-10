@@ -1,6 +1,5 @@
 # Service-oriented-architecture
 
-
 Microservices Library System
 A Service-Oriented Architecture (SOA) project for managing a library, built with Node.js and powered by microservices. Each service handles a specific domain:
 
@@ -22,7 +21,6 @@ Fully documented APIs using OpenAPI
 Robust validation with Joi framework
 Scalable deployment with Docker & Kubernetes
 Automated CI/CD pipeline via GitHub Actions
-
 
 Initialize a New Node.js Project
 npm init -y
