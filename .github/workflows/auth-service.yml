@@ -36,6 +36,9 @@ jobs:
         with:
           node-version: 18
 
+      - name: Change to auth-service directory
+        run: cd auth-service
+
       - name: Install Dependencies
         run: npm install
 
