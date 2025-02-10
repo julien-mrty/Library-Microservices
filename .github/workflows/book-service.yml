@@ -59,4 +59,3 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
         run: npm test
         working-directory: book-service
-

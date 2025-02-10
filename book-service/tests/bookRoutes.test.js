@@ -13,7 +13,7 @@ describe('📚 Book Routes Tests', () => {
     const res = await request(app).post('/api/books').send({
       title: 'Test Book',
       author: 'John Doe',
-      year: 2024
+      year: 2024,
     });
 
     expect(res.status).toBe(201);
@@ -31,7 +31,7 @@ describe('📚 Book Routes Tests', () => {
     const res = await request(app).put(`/api/books/${bookId}`).send({
       title: 'Updated Book Title',
       author: 'Jane Doe',
-      year: 2025
+      year: 2025,
     });
 
     expect(res.status).toBe(200);
