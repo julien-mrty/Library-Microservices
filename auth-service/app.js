@@ -1,9 +1,11 @@
 const express = require('express');
-const authRoutes = require('./authRoutes'); // Import routes
+const authRoutes = require('./authRoutes');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 // Root Endpoint
 app.get('/', (req, res) => {
