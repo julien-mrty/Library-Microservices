@@ -35,8 +35,7 @@ describe('Protected Routes Tests', () => {
   });
 
   test('❌ Block access to protected route without token', async () => {
-    const res = await request(app)
-      .get('/api/auth/protected');
+    const res = await request(app).get('/api/auth/protected');
 
     expect(res.status).toBe(401);
     expect(res.body.message).toBe('Access token required');

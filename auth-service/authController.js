@@ -85,14 +85,19 @@ exports.login = async (req, res) => {
 exports.refreshToken = (req, res) => {
   const refreshToken = req.cookies.refreshToken; // Read from cookie
 
-  if (!refreshToken) return res.status(403).json({ message: 'Refresh token required' });
+  if (!refreshToken)
+    return res.status(403).json({ message: 'Refresh token required' });
 
   jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid refresh token' });
 
-    const newAccessToken = jwt.sign({ username: user.username }, ACCESS_SECRET, {
-      expiresIn: '15m',
-    });
+    const newAccessToken = jwt.sign(
+      { username: user.username },
+      ACCESS_SECRET,
+      {
+        expiresIn: '15m',
+      }
+    );
 
     res.json({ accessToken: newAccessToken });
   });
@@ -105,6 +110,10 @@ exports.logout = (req, res) => {
     return res.status(400).json({ message: 'No refresh token found' });
   }
 
-  res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'Strict' });
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Strict',
+  });
   res.json({ message: 'Logged out successfully' });
 };
