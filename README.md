@@ -1,5 +1,29 @@
 # Service-oriented-architecture
 
+
+Microservices Library System
+A Service-Oriented Architecture (SOA) project for managing a library, built with Node.js and powered by microservices. Each service handles a specific domain:
+
+Authentication Service – Manages user authentication and authorization
+Movie Service – Handles movie-related data
+Book Service – Manages book-related information
+Tech Stack
+Node.js – Backend framework
+PostgreSQL – Centralized database for all services
+Joi – Schema validation for robust data integrity
+OpenAPI – API documentation for seamless integration
+Docker & Kubernetes – Containerization & orchestration for scalable deployment
+GitHub Actions – CI/CD automation for streamlined development
+
+Features
+Microservices architecture with clear separation of concerns
+Secure authentication and role-based access control
+Fully documented APIs using OpenAPI
+Robust validation with Joi framework
+Scalable deployment with Docker & Kubernetes
+Automated CI/CD pipeline via GitHub Actions
+
+
 Initialize a New Node.js Project
 npm init -y
 
