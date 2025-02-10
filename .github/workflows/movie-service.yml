@@ -21,6 +21,11 @@ jobs:
           POSTGRES_DB: moviedb
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout Code
@@ -40,9 +45,13 @@ jobs:
         working-directory: movie-service
 
       - name: Apply Database Migrations
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/moviedb
         run: npx prisma migrate dev --name init
         working-directory: movie-service
 
       - name: Run Tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/moviedb
         run: npm test
         working-directory: movie-service
