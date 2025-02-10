@@ -43,7 +43,7 @@ describe('Authentication Tests', () => {
     refreshToken = res.headers['set-cookie']?.[0]; // ✅ Fix: Use `res`, not `loginRes`
 
     if (!refreshToken) {
-      throw new Error("refreshToken is undefined. Login might have failed.");
+      throw new Error('refreshToken is undefined. Login might have failed.');
     }
   });
 
@@ -58,14 +58,14 @@ describe('Authentication Tests', () => {
 
   test('✅ User can log out and refresh token is invalidated', async () => {
     if (!refreshToken) {
-      throw new Error("refreshToken is undefined. Skipping logout test.");
+      throw new Error('refreshToken is undefined. Skipping logout test.');
     }
 
     const res = await request(app)
       .post('/api/auth/logout')
       .set('Cookie', refreshToken);
 
-    console.log("Logout Response:", res.body); // 🔍 Debugging: Print response
+    console.log('Logout Response:', res.body); // 🔍 Debugging: Print response
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe('Logged out successfully');
