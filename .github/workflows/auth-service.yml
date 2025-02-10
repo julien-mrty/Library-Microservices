@@ -36,26 +36,27 @@ jobs:
         with:
           node-version: 18
 
-      - name: Change to auth-service directory
-        run: cd auth-service
-
       - name: Install Dependencies
         run: npm install
+        working-directory: auth-service
 
       - name: Debug Repository Structure
         run: ls -R
+        working-directory: auth-service
 
       - name: Generate Prisma Client
         run: npx prisma generate --schema=prisma/schema.prisma
+        working-directory: auth-service
 
       - name: Apply Database Migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
-        run: npx prisma migrate dev --name init
-
+        run: npx prisma migrate dev --name init --schema=prisma/schema.prisma
+        working-directory: auth-service
       - name: Run Tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
           ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
           REFRESH_SECRET: ${{ secrets.REFRESH_SECRET }}
         run: npm test
+        working-directory: auth-service
