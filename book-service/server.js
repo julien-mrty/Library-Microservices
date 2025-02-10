@@ -1,6 +1,6 @@
-const app = require('./book-service'); // Import the app from app.js
-const port = 3001;
+const app = require('./app');
+const port = process.env.PORT;
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Book Service running on http://localhost:${port}`);
 });
