@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  book-service-tests:
+  book-tests:
     runs-on: ubuntu-latest
 
     services:

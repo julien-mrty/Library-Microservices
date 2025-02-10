@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "test": "npm run prisma:generate && jest",
     "start": "node server.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

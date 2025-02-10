@@ -1,7 +1,6 @@
-// movie-service/server.js
-const app = require('./movie-service');
+const app = require('./app');
+const port = process.env.PORT;
 
-const PORT = process.env.MOVIES_PORT || 6000;
-app.listen(PORT, () => {
-  console.log(`Movies service running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`🎬 Movie Service running on http://localhost:${port}`);
 });

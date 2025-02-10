@@ -12,8 +12,18 @@ jobs:
   movie-tests:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: moviedb
+        ports:
+          - 5432:5432
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -21,10 +31,18 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        working-directory: movie-service
+      - name: Install Dependencies
         run: npm install
-
-      - name: Run tests
         working-directory: movie-service
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: movie-service
+
+      - name: Apply Database Migrations
+        run: npx prisma migrate dev --name init
+        working-directory: movie-service
+
+      - name: Run Tests
         run: npm test
+        working-directory: movie-service
