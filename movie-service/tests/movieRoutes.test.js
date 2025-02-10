@@ -13,7 +13,7 @@ describe('🎬 Movie Routes Tests', () => {
     const res = await request(app).post('/api/movies').send({
       title: 'Test Movie',
       director: 'Director',
-      year: 2023
+      year: 2023,
     });
 
     expect(res.status).toBe(201);
@@ -31,7 +31,7 @@ describe('🎬 Movie Routes Tests', () => {
     const res = await request(app).put(`/api/movies/${movieId}`).send({
       title: 'Updated Movie Title',
       director: 'New Director',
-      year: 2025
+      year: 2025,
     });
 
     expect(res.status).toBe(200);

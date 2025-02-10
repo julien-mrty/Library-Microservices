@@ -14,7 +14,9 @@ exports.getMovies = async (req, res) => {
 exports.addMovie = async (req, res) => {
   try {
     const { title, director, year } = req.body;
-    const movie = await prisma.movie.create({ data: { title, director, year } });
+    const movie = await prisma.movie.create({
+      data: { title, director, year },
+    });
     res.status(201).json({ message: 'Movie added successfully', movie });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
