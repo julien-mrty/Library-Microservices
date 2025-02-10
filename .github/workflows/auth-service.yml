@@ -40,10 +40,6 @@ jobs:
         run: npm install
         working-directory: auth-service
 
-      - name: Debug Repository Structure
-        run: ls -R
-        working-directory: auth-service
-
       - name: Generate Prisma Client
         run: npx prisma generate --schema=prisma/schema.prisma
         working-directory: auth-service

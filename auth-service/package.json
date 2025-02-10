@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "test": "npm run prisma:generate && jest",
     "start": "node server.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -18,7 +20,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "@prisma/client": "^5.0.0"
   },
   "devDependencies": {
     "husky": "^9.1.7",

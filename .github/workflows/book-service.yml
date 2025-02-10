@@ -9,11 +9,26 @@ on:
       - main
 
 jobs:
-  book-tests:
+  book-service-tests:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bookdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -21,10 +36,27 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        working-directory: book-service
+      - name: Install Dependencies
         run: npm install
-
-      - name: Run tests
         working-directory: book-service
+
+      - name: Install Prisma Client
+        run: npm install @prisma/client
+        working-directory: book-service
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: book-service
+
+      - name: Apply Database Migrations
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+        run: npx prisma migrate dev --name init
+        working-directory: book-service
+
+      - name: Run Tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
         run: npm test
+        working-directory: book-service
+
