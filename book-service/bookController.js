@@ -21,7 +21,10 @@ async function getUserIdFromToken(req) {
     // Return the userId if valid
     return { userId: authRes.data.userId };
   } catch (error) {
-    console.error('Auth verification failed:', error.response?.data || error.message);
+    console.error(
+      'Auth verification failed:',
+      error.response?.data || error.message
+    );
     // Return an invalidToken error
     return { error: 'invalidToken' };
   }
@@ -46,7 +49,6 @@ exports.getBooks = async (req, res) => {
     // Now userId is valid, fetch the books
     const books = await prisma.book.findMany({ where: { userId } });
     return res.json(books);
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Server error' });
@@ -77,7 +79,6 @@ exports.addBook = async (req, res) => {
   }
 };
 
-
 // Securely Update a Book (Only the owner can update)
 exports.updateBook = async (req, res) => {
   try {
@@ -95,7 +96,9 @@ exports.updateBook = async (req, res) => {
 
     const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
     if (!book || book.userId !== userId) {
-      return res.status(403).json({ message: 'Forbidden: You do not own this book' });
+      return res
+        .status(403)
+        .json({ message: 'Forbidden: You do not own this book' });
     }
 
     const updatedBook = await prisma.book.update({
@@ -126,7 +129,9 @@ exports.deleteBook = async (req, res) => {
     const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
 
     if (!book || book.userId !== userId) {
-      return res.status(403).json({ message: 'Forbidden: You do not own this book' });
+      return res
+        .status(403)
+        .json({ message: 'Forbidden: You do not own this book' });
     }
 
     await prisma.book.delete({ where: { id: parseInt(id) } });
