@@ -82,7 +82,7 @@ jobs:
       - name: Apply Database Migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
-        run: npx prisma migrate dev --name init
+        run: npx prisma migrate deploy
         working-directory: book-service
 
       # -----------------------------------------
