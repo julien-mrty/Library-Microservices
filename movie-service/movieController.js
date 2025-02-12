@@ -1,12 +1,27 @@
 const prisma = require('./prismaClient');
 
-// Get all movies
+// Get movies only for the authenticated user
 exports.getMovies = async (req, res) => {
   try {
-    const movies = await prisma.movie.findMany();
+    const token = req.header('Authorization');
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: 'Access denied. No token provided.' });
+    }
+
+    // Call Auth Service to verify token
+    const authRes = await axios.get(AUTH_SERVICE_URL, {
+      headers: { Authorization: token },
+    });
+
+    const userId = authRes.data.userId;
+
+    // Fetch movies owned by the authenticated user
+    const movies = await prisma.movie.findMany({ where: { userId } });
     res.json(movies);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(403).json({ message: 'Unauthorized access' });
   }
 };
 

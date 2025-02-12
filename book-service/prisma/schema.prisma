@@ -8,8 +8,9 @@ datasource db {
 }
 
 model Book {
-  id     Int    @id @default(autoincrement())
-  title  String
-  author String
-  year   Int
+  id        Int     @id @default(autoincrement())
+  title     String
+  author    String
+  year      Int
+  userId    Int  // Foreign key to User (Auth Service)
 }

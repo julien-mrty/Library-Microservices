@@ -11,6 +11,9 @@ on:
 jobs:
   auth-tests:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.ACTION_SECRET_KEY }}
+      REFRESH_SECRET_KEY: ${{ secrets.ACTION_REFRESH_SECRET_KEY }}
 
     services:
       postgres:
@@ -52,7 +55,5 @@ jobs:
       - name: Run Tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
-          ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
-          REFRESH_SECRET: ${{ secrets.REFRESH_SECRET }}
         run: npm test
         working-directory: auth-service

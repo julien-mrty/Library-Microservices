@@ -11,6 +11,9 @@ on:
 jobs:
   book-tests:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.ACTION_SECRET_KEY }}
+      REFRESH_SECRET_KEY: ${{ secrets.ACTION_REFRESH_SECRET_KEY }}
 
     services:
       postgres:
@@ -36,6 +39,34 @@ jobs:
         with:
           node-version: 18
 
+      # -----------------------------------------
+      # 1. Install + Start Auth Service
+      # -----------------------------------------
+      - name: Install & Start Auth Service
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+        run: |
+          cd auth-service
+          npm install
+
+          # Run Prisma migrations for auth-service
+          npx prisma migrate dev --name init
+
+          PORT=5000 npm run start &   # Run in background
+          # Wait for Auth Service to become available
+          for i in {1..10}; do
+            if curl -s http://localhost:5000/health; then
+              echo "✅ Auth Service is up!"
+              break
+            fi
+            echo "🚀 Waiting for Auth Service..."
+            sleep 3
+          done
+          cd ..
+
+      # -----------------------------------------
+      # 2. Setup & Prepare Book Service
+      # -----------------------------------------
       - name: Install Dependencies
         run: npm install
         working-directory: book-service
@@ -51,11 +82,15 @@ jobs:
       - name: Apply Database Migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
-        run: npx prisma migrate dev --name init
+        run: npx prisma migrate deploy
         working-directory: book-service
 
+      # -----------------------------------------
+      # 3. Run Tests
+      # -----------------------------------------
       - name: Run Tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+          AUTH_SERVICE_URL: http://localhost:5000/api/auth
         run: npm test
         working-directory: book-service

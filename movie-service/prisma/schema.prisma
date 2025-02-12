@@ -8,8 +8,9 @@ datasource db {
 }
 
 model Movie {
-  id       Int    @id @default(autoincrement())
-  title    String
-  director String
-  year     Int
+  id        Int     @id @default(autoincrement())
+  title     String
+  director  String
+  year      Int
+  userId    Int  // Foreign key to User (Auth Service)
 }

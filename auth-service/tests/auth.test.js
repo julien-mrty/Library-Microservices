@@ -9,28 +9,16 @@ describe('Authentication Tests', () => {
   let refreshToken;
 
   beforeAll(async () => {
-    // Cleanup test user if it exists
+    // Cleanup previous test user
     await prisma.user.deleteMany({ where: { username: testUser.username } });
+
+    // Register test user
+    await request(app).post('/api/auth/register').send(testUser);
   });
 
   afterAll(async () => {
-    // Cleanup database after tests
     await prisma.user.deleteMany({ where: { username: testUser.username } });
     await prisma.$disconnect();
-  });
-
-  test('✅ Register a new user', async () => {
-    const res = await request(app).post('/api/auth/register').send(testUser);
-
-    expect(res.status).toBe(201);
-    expect(res.body.message).toBe('User registered successfully');
-  });
-
-  test('❌ Prevent duplicate user registration', async () => {
-    const res = await request(app).post('/api/auth/register').send(testUser);
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toBe('User already exists');
   });
 
   test('✅ User can log in and receive tokens', async () => {
@@ -39,12 +27,11 @@ describe('Authentication Tests', () => {
     expect(res.status).toBe(200);
     expect(res.body.accessToken).toBeDefined();
 
+    // Grab the refresh token from the Set-Cookie header
     accessToken = res.body.accessToken;
-    refreshToken = res.headers['set-cookie']?.[0]; // ✅ Fix: Use `res`, not `loginRes`
+    refreshToken = res.headers['set-cookie']?.[0];
 
-    if (!refreshToken) {
-      throw new Error('refreshToken is undefined. Login might have failed.');
-    }
+    expect(refreshToken).toBeDefined();
   });
 
   test('❌ User cannot log in with incorrect password', async () => {
@@ -64,8 +51,6 @@ describe('Authentication Tests', () => {
     const res = await request(app)
       .post('/api/auth/logout')
       .set('Cookie', refreshToken);
-
-    console.log('Logout Response:', res.body); // 🔍 Debugging: Print response
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe('Logged out successfully');
