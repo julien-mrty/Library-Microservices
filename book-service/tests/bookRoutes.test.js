@@ -6,7 +6,7 @@ const axios = require('axios');
 let accessToken;
 let bookId;
 
-const AUTH_SERVICE_URL = 'http://localhost:5000/api/auth'; // Ensure this is the correct auth service URL
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
 jest.setTimeout(30000); // Increase timeout if needed
 
