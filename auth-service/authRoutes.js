@@ -20,7 +20,7 @@ router.get('/protected', authenticateToken, (req, res) => {
   res.json({ message: `Hello ${req.user.username}, you have access!` });
 });
 
-app.get('/health', (req, res) => {
+router.get('/health', (req, res) => {
   res.json({ status: 'UP' });
 });
 
