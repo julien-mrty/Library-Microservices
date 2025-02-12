@@ -4,8 +4,7 @@ const prisma = require('./prismaClient'); // Import Prisma
 require('dotenv').config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
-const ACCESS_SECRET = process.env.ACCESS_SECRET;
-const REFRESH_SECRET = process.env.REFRESH_SECRET;
+const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
 
 // In-memory refresh token store (Replace with database storage in production)
 let refreshTokens = [];
@@ -59,13 +58,19 @@ exports.login = async (req, res) => {
     }
 
     // Generate Tokens
-    const accessToken = jwt.sign({ username: user.username }, ACCESS_SECRET, {
-      expiresIn: '15m', // Short-lived token
-    });
+    const accessToken = jwt.sign(
+      { userId: user.id, username: user.username },
+      SECRET_KEY,
+      {
+        expiresIn: '15m', // Short-lived token
+      });
 
-    const refreshToken = jwt.sign({ username: user.username }, REFRESH_SECRET, {
-      expiresIn: '7d', // Long-lived refresh token
-    });
+    const refreshToken = jwt.sign(
+      { userId: user.id, username: user.username },
+      REFRESH_SECRET_KEY,
+      {
+        expiresIn: '7d', // Long-lived refresh token
+      });
 
     refreshTokens.push(refreshToken); // Store refresh token (Use DB in production)
 
@@ -116,4 +121,33 @@ exports.logout = (req, res) => {
     sameSite: 'Strict',
   });
   res.json({ message: 'Logged out successfully' });
+};
+
+// Verify User via JWT
+exports.verifyToken = async (req, res) => {
+  try {
+    const token = req.header('Authorization');
+    if (!token) {
+      return res.status(401).json({ message: 'Access denied. No token provided.' });
+    }
+
+    console.log("Received Token in Auth Service:", token);
+
+    // Remove "Bearer " prefix if present
+    const formattedToken = token.replace('Bearer ', '');
+    console.log("Formatted Token:", formattedToken);
+
+    // Verify JWT Token
+    const decoded = jwt.verify(formattedToken, SECRET_KEY);
+
+    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+
+    res.json({ valid: true, userId: user.id });
+  } catch (error) {
+    res.status(403).json({ message: 'Invalid or expired token' });
+  }
 };
