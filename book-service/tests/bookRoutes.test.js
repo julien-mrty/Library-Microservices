@@ -27,6 +27,8 @@ beforeAll(async () => {
 
     accessToken = loginRes.data.accessToken;
     console.log('🔍 Generated Access Token:', accessToken);
+    console.log('BC test AUTH_SERVICE_URL:', AUTH_SERVICE_URL);
+
   } catch (error) {
     console.error(
       '🚨 Auth Setup Error:',

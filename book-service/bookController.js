@@ -17,6 +17,8 @@ async function getUserIdFromToken(req) {
       headers: { Authorization: token },
     });
 
+    console.log('AUTH_SERVICE_URL:', AUTH_SERVICE_URL);
+
     return authRes.data.userId; // Extract userId from the auth service response
   } catch (error) {
     console.error(
