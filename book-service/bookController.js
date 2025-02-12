@@ -9,7 +9,7 @@ async function getUserIdFromToken(req) {
     const token = req.header('Authorization');
 
     if (!token || !token.startsWith('Bearer ')) {
-      return res.status(401).json({ message: "Unauthorized: Missing token" });
+      return res.status(401).json({ message: 'Unauthorized: Missing token' });
     }
 
     // Verify token by calling Auth Service
@@ -19,7 +19,10 @@ async function getUserIdFromToken(req) {
 
     return authRes.data.userId; // Extract userId from the auth service response
   } catch (error) {
-    console.error('Auth verification failed:', error.response?.data || error.message);
+    console.error(
+      'Auth verification failed:',
+      error.response?.data || error.message
+    );
     return null;
   }
 }
@@ -36,7 +39,7 @@ exports.getBooks = async (req, res) => {
     const books = await prisma.book.findMany({ where: { userId } });
     res.json(books);
   } catch (error) {
-    res.status(403).json({ message: "Unauthorized access" });
+    res.status(403).json({ message: 'Unauthorized access' });
   }
 };
 
@@ -76,7 +79,9 @@ exports.updateBook = async (req, res) => {
     const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
 
     if (!book || book.userId !== userId) {
-      return res.status(403).json({ message: 'Forbidden: You do not own this book' });
+      return res
+        .status(403)
+        .json({ message: 'Forbidden: You do not own this book' });
     }
 
     // Update the book
@@ -106,7 +111,9 @@ exports.deleteBook = async (req, res) => {
     const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
 
     if (!book || book.userId !== userId) {
-      return res.status(403).json({ message: 'Forbidden: You do not own this book' });
+      return res
+        .status(403)
+        .json({ message: 'Forbidden: You do not own this book' });
     }
 
     // Delete the book

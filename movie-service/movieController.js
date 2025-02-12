@@ -5,7 +5,9 @@ exports.getMovies = async (req, res) => {
   try {
     const token = req.header('Authorization');
     if (!token) {
-      return res.status(401).json({ message: "Access denied. No token provided." });
+      return res
+        .status(401)
+        .json({ message: 'Access denied. No token provided.' });
     }
 
     // Call Auth Service to verify token
@@ -19,7 +21,7 @@ exports.getMovies = async (req, res) => {
     const movies = await prisma.movie.findMany({ where: { userId } });
     res.json(movies);
   } catch (error) {
-    res.status(403).json({ message: "Unauthorized access" });
+    res.status(403).json({ message: 'Unauthorized access' });
   }
 };
 
