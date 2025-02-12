@@ -91,6 +91,6 @@ jobs:
       - name: Run Tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
-          AUTH_SERVICE_URL : http://localhost:5000/api/auth
+          AUTH_SERVICE_URL: http://localhost:5000/api/auth
         run: npm test
         working-directory: book-service
