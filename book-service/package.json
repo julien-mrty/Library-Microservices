@@ -5,7 +5,7 @@
   "scripts": {
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
-    "test": "npm run prisma:generate && jest",
+    "test": "npm run prisma:generate && npx jest --runInBand",
     "start": "node book-service.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

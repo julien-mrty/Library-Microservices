@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const ACCESS_SECRET = process.env.ACCESS_SECRET;
+const SECRET_KEY = process.env.SECRET_KEY;
 
 exports.authenticateToken = (req, res, next) => {
   const authHeader = req.header('Authorization');
@@ -9,7 +9,7 @@ exports.authenticateToken = (req, res, next) => {
 
   if (!token) return res.status(401).json({ message: 'Access token required' });
 
-  jwt.verify(token, ACCESS_SECRET, (err, user) => {
+  jwt.verify(token, SECRET_KEY, (err, user) => {
     if (err)
       return res.status(403).json({ message: 'Invalid or expired token' });
 

@@ -36,6 +36,28 @@ jobs:
         with:
           node-version: 18
 
+      # -----------------------------------------
+      # 1. Install + Start Auth Service
+      # -----------------------------------------
+      - name: Install & Start Auth Service
+        run: |
+          cd auth-service
+          npm install
+          npm run start &   # Run in background
+          # Wait for Auth Service to become available
+          for i in {1..10}; do
+            if curl -s http://localhost:5000/health; then
+              echo "✅ Auth Service is up!"
+              break
+            fi
+            echo "🚀 Waiting for Auth Service..."
+            sleep 3
+          done
+          cd ..
+
+      # -----------------------------------------
+      # 2. Setup & Prepare Book Service
+      # -----------------------------------------
       - name: Install Dependencies
         run: npm install
         working-directory: book-service
@@ -54,6 +76,9 @@ jobs:
         run: npx prisma migrate dev --name init
         working-directory: book-service
 
+      # -----------------------------------------
+      # 3. Run Tests
+      # -----------------------------------------
       - name: Run Tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb

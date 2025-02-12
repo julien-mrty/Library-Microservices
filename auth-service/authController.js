@@ -63,16 +63,14 @@ exports.login = async (req, res) => {
       SECRET_KEY,
       {
         expiresIn: '15m', // Short-lived token
-      }
-    );
+      });
 
     const refreshToken = jwt.sign(
       { userId: user.id, username: user.username },
       REFRESH_SECRET_KEY,
       {
         expiresIn: '7d', // Long-lived refresh token
-      }
-    );
+      });
 
     refreshTokens.push(refreshToken); // Store refresh token (Use DB in production)
 
@@ -95,12 +93,12 @@ exports.refreshToken = (req, res) => {
   if (!refreshToken)
     return res.status(403).json({ message: 'Refresh token required' });
 
-  jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {
+  jwt.verify(refreshToken, REFRESH_SECRET_KEY, (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid refresh token' });
 
     const newAccessToken = jwt.sign(
       { username: user.username },
-      ACCESS_SECRET,
+      SECRET_KEY,
       {
         expiresIn: '15m',
       }
@@ -130,23 +128,16 @@ exports.verifyToken = async (req, res) => {
   try {
     const token = req.header('Authorization');
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: 'Access denied. No token provided.' });
+      return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
-
-    console.log('Received Token in Auth Service:', token);
 
     // Remove "Bearer " prefix if present
     const formattedToken = token.replace('Bearer ', '');
-    console.log('Formatted Token:', formattedToken);
 
     // Verify JWT Token
     const decoded = jwt.verify(formattedToken, SECRET_KEY);
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-    });
+    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid token' });
