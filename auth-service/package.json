@@ -20,6 +20,7 @@
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-oas-generator": "^1.0.46",
     "glob": "^11.0.1",
     "inflight": "^1.0.6",
     "jsonwebtoken": "^9.0.2",
