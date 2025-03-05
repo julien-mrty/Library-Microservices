@@ -1,5 +1,5 @@
 const express = require('express');
-const oasGenerator = require("express-oas-generator"); // OpenAPI auto-generator
+const oasGenerator = require('express-oas-generator'); // OpenAPI auto-generator
 const bookRoutes = require('./bookRoutes');
 require('dotenv').config();
 
