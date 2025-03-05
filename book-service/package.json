@@ -6,7 +6,7 @@
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "test": "npm run prisma:generate && npx jest --runInBand",
-    "start": "node book-service.js",
+    "start": "node server.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -17,7 +17,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
-    "express": "^4.21.2"
+    "express-oas-generator": "^1.0.46"
   },
   "devDependencies": {
     "@prisma/client": "^6.3.1",
