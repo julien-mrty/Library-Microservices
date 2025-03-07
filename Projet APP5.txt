@@ -19,7 +19,7 @@ Contraintes techniques et fonctionnalités attendues
 Options Bonus
 ⭐ Développement d’un front-end pour accompagner l’API (facultatif).
 ⭐ CI / CD : github action ou gitlab CI
-⭐ Clean Architecture : Le beau code, toujours un +
+⭐ Clean Architecture : Le beau code, toujours un + : service, controlleur, repo A REFACTOR
 ⭐ Déploiement sous Kubernetes + monitoring, qui seront abordés en cours la semaine suivante.
 ⭐ Présentation finale du projet lors du dernier cours (notée ou non selon le choix des participants).
 

@@ -44,7 +44,7 @@ jobs:
       # -----------------------------------------
       - name: Install & Start Auth Service
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/auth-db
         run: |
           cd auth-service
           npm install
