@@ -74,6 +74,5 @@ docker start postgres-dev
 Connect to PostgreSQL Inside the Container
 docker exec -it postgres-dev psql -U myuser -d mydatabase
 
-
-While in developement mode, set the env variable to developement : 
+While in developement mode, set the env variable to developement :
 Windows powershell : $env:NODE_ENV="developement"
