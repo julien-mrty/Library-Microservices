@@ -41,14 +41,17 @@ spec:
               value: myuser
             - name: POSTGRES_PASSWORD
               value: mypassword
-            - name: POSTGRES_DB
-              value: auth-db
           ports:
             - containerPort: 5432
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-storage
+            - mountPath: /docker-entrypoint-initdb.d
+              name: init-script
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: init-script
+          configMap:
+            name: postgres-init-script

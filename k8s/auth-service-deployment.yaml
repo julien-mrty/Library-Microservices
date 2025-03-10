@@ -17,6 +17,8 @@ spec:
           image: auth-service:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: NODE_ENV
+              value: "production"
             - name: DATABASE_URL
               value: "postgres://myuser:mypassword@postgres:5432/auth-db"
           ports:
@@ -27,7 +29,11 @@ kind: Service
 metadata:
   name: auth
 spec:
+  type: NodePort 
   ports:
-    - port: 3000
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30000  
   selector:
     app: auth-service

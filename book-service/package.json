@@ -16,10 +16,10 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.4.1",
-    "prisma": "^6.4.1",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
-    "express-oas-generator": "^1.0.46"
+    "express-oas-generator": "^1.0.46",
+    "prisma": "^6.4.1"
   },
   "devDependencies": {
     "dotenv": "^16.4.7",
