@@ -1,5 +1,13 @@
 const app = require('./app'); // Import the app from app.js
 const prisma = require('./prismaClient'); // Import Prisma client
+const dotenv = require('dotenv');
+
+// Determine the environment
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+
+// Load the environment file
+dotenv.config({ path: envFile });
 
 const port = process.env.PORT;
 
