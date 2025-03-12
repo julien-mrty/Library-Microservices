@@ -17,6 +17,8 @@ spec:
           image: book-service:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: NODE_ENV
+              value: "production"
             - name: DATABASE_URL
               value: "postgres://myuser:mypassword@postgres:5432/book-db?schema=public"
           ports:
@@ -27,11 +29,10 @@ kind: Service
 metadata:
   name: book
 spec:
-  type: NodePort
+  selector:
+    app: book-service
   ports:
     - protocol: TCP
       port: 3001
       targetPort: 3001
-      nodePort: 30001
-  selector:
-    app: book-service
+  type: LoadBalancer
