@@ -2,7 +2,7 @@
 kubectl delete pod -l app=auth-service
 kubectl delete pod -l app=book-service
 
-"Deleting the docker image from minikube..."
+"Deleting the docker images from minikube..."
 minikube ssh -- docker rmi -f auth-service:latest
 minikube ssh -- docker rmi -f book-service:latest
 
@@ -26,4 +26,5 @@ kubectl get pods
 "Cluster and pods IP:PORT"
 minikube ip
 kubectl get svc
-minikube tunnel
+minikube service list
+minikube service auth book --url

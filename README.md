@@ -76,3 +76,9 @@ docker exec -it postgres-dev psql -U myuser -d mydatabase
 
 While in developement mode, set the env variable to developement :
 Windows powershell : $env:NODE_ENV="developement"
+
+To do the migrations locally, first install dotenv-cli :
+npm install -g dotenv-cli
+
+Then run the migration with the appropriate .env file :
+dotenv -e .env.dev -- npx prisma migrate dev --name init

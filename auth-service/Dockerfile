@@ -5,5 +5,5 @@ RUN npm install
 COPY prisma/ ./prisma/
 RUN npx prisma generate   
 COPY . .
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "until npx prisma migrate deploy; do sleep 2; done && node server.js"]
 EXPOSE 3000
