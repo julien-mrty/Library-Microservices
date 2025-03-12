@@ -23,6 +23,7 @@
     "express-oas-generator": "^1.0.46",
     "glob": "^11.0.1",
     "inflight": "^1.0.6",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^11.0.2",
     "pg": "^8.13.1",

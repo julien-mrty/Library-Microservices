@@ -19,6 +19,7 @@
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "express-oas-generator": "^1.0.46",
+    "joi": "^17.13.3",
     "prisma": "^6.4.1"
   },
   "devDependencies": {

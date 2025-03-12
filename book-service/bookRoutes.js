@@ -1,18 +1,28 @@
+// bookRoutes.js
 const express = require('express');
-const { validateBook } = require('./bookMiddleware');
-
+const { validateBook } = require('./bookMiddleware'); 
 const {
   getBooks,
   addBook,
   updateBook,
   deleteBook,
 } = require('./bookController');
+const { createBookSchema } = require('./validationSchemas');
+const {updateBookSchema } = require('./validationSchemas');
+const { validate } = require('./validationMiddleware');
 
 const router = express.Router();
 
+
 router.get('/', getBooks);
-router.post('/', addBook);
-router.put('/:id', updateBook);
+
+
+router.post('/', validate(createBookSchema), addBook);
+
+
+router.put('/:id', validate(updateBookSchema), updateBook);
+
+
 router.delete('/:id', deleteBook);
 
 module.exports = router;
