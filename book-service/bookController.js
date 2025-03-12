@@ -1,5 +1,13 @@
 const prisma = require('./prismaClient');
 const axios = require('axios');
+const dotenv = require('dotenv');
+
+// Determine the environment
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+
+// Load the environment file
+dotenv.config({ path: envFile });
 
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
@@ -17,8 +25,8 @@ async function getUserIdFromToken(req) {
     const authRes = await axios.get(`${AUTH_SERVICE_URL}/verify-token`, {
       headers: { Authorization: token },
     });
-    console.log('BookController AUTH_SERVICE_URL:', AUTH_SERVICE_URL);
-    // Return the userId if valid
+
+    //  Return the userId if valid
     return { userId: authRes.data.userId };
   } catch (error) {
     console.error(
