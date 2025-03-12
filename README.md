@@ -251,7 +251,9 @@ git config core.hooksPath .husky
 To deploy our solution using Kubernetes with Minikube, developers must install the following tools:
 
 ### 1. Install Minikube
+
 Minikube allows you to run Kubernetes clusters locally.
+
 - Download and install Minikube from the official website: [Minikube Installation Guide](https://minikube.sigs.k8s.io/docs/start/)
 - Ensure Minikube is correctly installed by running:
   ```bash
@@ -259,7 +261,9 @@ Minikube allows you to run Kubernetes clusters locally.
   ```
 
 ### 2. Install kubectl
+
 kubectl is the command-line tool used to interact with Kubernetes clusters.
+
 - Install kubectl by following the guide: [kubectl Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - Verify installation:
   ```bash
@@ -267,7 +271,9 @@ kubectl is the command-line tool used to interact with Kubernetes clusters.
   ```
 
 ### 3. Start Minikube
+
 Once Minikube and kubectl are installed, start a Minikube cluster:
+
 ```bash
 minikube start
 ```
@@ -275,19 +281,25 @@ minikube start
 ## How to Use Deployment Scripts
 
 ### 1. `deploy_postgres_to_minikube.ps1`
+
 #### Description
+
 This script deletes any existing PostgreSQL resources in the Minikube cluster and redeploys PostgreSQL using Kubernetes configuration files.
 
 #### What It Does
+
 - Deletes the existing PostgreSQL deployment and persistent volume claim (PVC)
 - Applies the PostgreSQL ConfigMap and Deployment configuration files
 - Checks the status of the PostgreSQL pods
 
 #### When to Use
+
 Use this script when you need to reset the PostgreSQL database or apply changes to its configuration.
 
 #### Usage
+
 Run the script in a PowerShell terminal:
+
 ```powershell
 ./deploy_postgres_to_minikube.ps1
 ```
@@ -295,10 +307,13 @@ Run the script in a PowerShell terminal:
 ---
 
 ### 2. `deploy_services_to_minikube.ps1`
+
 #### Description
+
 This script deploys the authentication and book services to the Minikube cluster.
 
 #### What It Does
+
 - Deletes existing service pods
 - Removes old Docker images from Minikube
 - Builds new Docker images for the services
@@ -307,15 +322,19 @@ This script deploys the authentication and book services to the Minikube cluster
 - Displays the status of pods and services
 
 #### When to Use
+
 Use this script when updating the authentication or book services, such as after modifying the codebase or Docker images.
 
 #### Usage
+
 Run the script in a PowerShell terminal:
+
 ```powershell
 ./deploy_services_to_minikube.ps1
 ```
 
 Once executed, you can check the status of your services using:
+
 ```powershell
 kubectl get pods
 kubectl get svc
