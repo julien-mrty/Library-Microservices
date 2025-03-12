@@ -26,7 +26,8 @@
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^11.0.2",
     "pg": "^8.13.1",
-    "prisma": "^6.4.1"
+    "prisma": "^6.4.1",
+    "psql": "^0.0.1"
   },
   "devDependencies": {
     "husky": "^9.1.7",
