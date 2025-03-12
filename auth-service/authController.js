@@ -1,7 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('./prismaClient'); // Import Prisma
+const dotenv = require('dotenv');
 require('dotenv').config();
+
+// Determine the environment
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+
+// Load the environment file
+dotenv.config({ path: envFile });
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
@@ -62,7 +70,7 @@ exports.login = async (req, res) => {
       { userId: user.id, username: user.username },
       SECRET_KEY,
       {
-        expiresIn: '15m', // Short-lived token
+        expiresIn: '60m', // Short-lived token
       }
     );
 
@@ -133,9 +141,11 @@ exports.verifyToken = async (req, res) => {
 
     // Remove "Bearer " prefix if present
     const formattedToken = token.replace('Bearer ', '');
+    console.error('formattedToken : ', formattedToken);
 
     // Verify JWT Token
     const decoded = jwt.verify(formattedToken, SECRET_KEY);
+    console.error('decoded : ', decoded);
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
