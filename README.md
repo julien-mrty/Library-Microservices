@@ -4,7 +4,6 @@ Microservices Library System
 A Service-Oriented Architecture (SOA) project for managing a library, built with Node.js and powered by microservices. Each service handles a specific domain:
 
 Authentication Service – Manages user authentication and authorization
-Movie Service – Handles movie-related data
 Book Service – Manages book-related information
 Tech Stack
 Node.js – Backend framework
@@ -119,7 +118,6 @@ This project is a **Library Management System** built using a microservices arch
 
 - **Authentication Service**: Manages user authentication and authorization.
 - **Book Service**: Handles book-related data.
-- **Movie Service**: Manages movie-related information.
 
 The system is designed to be **scalable**, **secure**, and **easy to maintain**.
 
@@ -181,7 +179,6 @@ Access the services:
 
 - **Auth Service**: `http://localhost:3000`
 - **Book Service**: `http://localhost:3001`
-- **Movie Service**: `http://localhost:3002`
 
 ---
 
@@ -247,45 +244,85 @@ git config core.hooksPath .husky
 
 ---
 
-## Deployment
+## Kubernetes Deployment Guide
 
-### Docker
+## Prerequisites
 
-Build the Docker images:
+To deploy our solution using Kubernetes with Minikube, developers must install the following tools:
 
-```bash
-docker build -t auth-service:latest ./auth-service/
-docker build -t book-service:latest ./book-service/
-docker build -t movie-service:latest ./movie-service/
-```
+### 1. Install Minikube
+Minikube allows you to run Kubernetes clusters locally.
+- Download and install Minikube from the official website: [Minikube Installation Guide](https://minikube.sigs.k8s.io/docs/start/)
+- Ensure Minikube is correctly installed by running:
+  ```bash
+  minikube version
+  ```
 
-Run the containers:
+### 2. Install kubectl
+kubectl is the command-line tool used to interact with Kubernetes clusters.
+- Install kubectl by following the guide: [kubectl Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- Verify installation:
+  ```bash
+  kubectl version --client
+  ```
 
-```bash
-docker-compose up
-```
-
-### Kubernetes
-
-Start Minikube:
-
+### 3. Start Minikube
+Once Minikube and kubectl are installed, start a Minikube cluster:
 ```bash
 minikube start
 ```
 
-Deploy the services:
+## How to Use Deployment Scripts
 
-```bash
-kubectl apply -f kubernetes/
+### 1. `deploy_postgres_to_minikube.ps1`
+#### Description
+This script deletes any existing PostgreSQL resources in the Minikube cluster and redeploys PostgreSQL using Kubernetes configuration files.
+
+#### What It Does
+- Deletes the existing PostgreSQL deployment and persistent volume claim (PVC)
+- Applies the PostgreSQL ConfigMap and Deployment configuration files
+- Checks the status of the PostgreSQL pods
+
+#### When to Use
+Use this script when you need to reset the PostgreSQL database or apply changes to its configuration.
+
+#### Usage
+Run the script in a PowerShell terminal:
+```powershell
+./deploy_postgres_to_minikube.ps1
 ```
 
-Access the services:
+---
 
-```bash
-minikube service auth-service
-minikube service book-service
-minikube service movie-service
+### 2. `deploy_services_to_minikube.ps1`
+#### Description
+This script deploys the authentication and book services to the Minikube cluster.
+
+#### What It Does
+- Deletes existing service pods
+- Removes old Docker images from Minikube
+- Builds new Docker images for the services
+- Loads the new images into Minikube
+- Applies the Kubernetes deployment configurations for each service
+- Displays the status of pods and services
+
+#### When to Use
+Use this script when updating the authentication or book services, such as after modifying the codebase or Docker images.
+
+#### Usage
+Run the script in a PowerShell terminal:
+```powershell
+./deploy_services_to_minikube.ps1
 ```
+
+Once executed, you can check the status of your services using:
+```powershell
+kubectl get pods
+kubectl get svc
+minikube service list
+```
+
+This ensures that the services are running and accessible within the Minikube cluster.
 
 ---
 
@@ -301,7 +338,6 @@ API documentation is generated using OpenAPI (Swagger). Access the Swagger UI at
 
 - **Auth Service**: `http://localhost:3000/api-docs`
 - **Book Service**: `http://localhost:3001/api-docs`
-- **Movie Service**: `http://localhost:3002/api-docs`
 
 ---
 
