@@ -1,2 +1,8 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/h"
+#!/bin/sh
+
+echo "Running Prettier on root directory..."
+npx prettier --write .
+echo "Running Prettier on auth-service..."
+cd auth-service && npx prettier --write .
+echo "Running Prettier on book-service..."
+cd ../book-service && npx prettier --write .

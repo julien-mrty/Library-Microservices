@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('./prismaClient'); // Import Prisma
 const dotenv = require('dotenv');
-const { userOutputSchema } = require('./validationSchemas');  // <= Schéma de validation de sortie
+const { userOutputSchema } = require('./validationSchemas'); // <= Schéma de validation de sortie
 require('dotenv').config();
 
 // Determine the environment

@@ -1,4 +1,3 @@
-
 services:
   ################################################################
   # 1. POSTGRES
@@ -10,13 +9,13 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
-      
+
     ports:
-      - "5432:5432"    # Pour exposer Postgres en local si besoin
+      - "5432:5432" # Pour exposer Postgres en local si besoin
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    
+
   ################################################################
   # 2. AUTH-SERVICE
   ################################################################
