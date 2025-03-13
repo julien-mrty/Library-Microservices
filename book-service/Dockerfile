@@ -9,4 +9,4 @@ COPY prisma/ ./prisma/
 RUN npx prisma generate   
 COPY . .
 CMD ["sh", "-c", "while ! npx prisma migrate deploy; do sleep 2; done && node server.js"]
-EXPOSE 3001
+EXPOSE 3001 
