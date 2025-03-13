@@ -44,7 +44,7 @@ jobs:
         working-directory: auth-service
 
       - name: Generate Prisma Client
-        run: npx prisma generate --schema=prisma/schema.prisma
+        run: npx prisma generate --schema=src/prisma/schema.prisma
         working-directory: auth-service
 
       - name: Apply Database Migrations
