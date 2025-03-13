@@ -50,7 +50,7 @@ jobs:
           npm install
 
           # Run Prisma migrations for auth-service
-          npx prisma migrate dev --name init
+          npx prisma migrate dev --name init --schema=src/prisma/schema.prisma
 
           PORT=5000 npm run start &   # Run in background
           # Wait for Auth Service to become available

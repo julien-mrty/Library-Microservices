@@ -50,7 +50,7 @@ jobs:
       - name: Apply Database Migrations
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
-        run: npx prisma migrate dev --name init --schema=prisma/schema.prisma
+        run: npx prisma migrate dev --name init --schema=src/prisma/schema.prisma
         working-directory: auth-service
       - name: Run Tests
         env:
