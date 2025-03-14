@@ -25,7 +25,10 @@ describe('Token Utilities', () => {
     it('should verify valid tokens', () => {
       const payload = tokenUtils.verifyToken('valid-token');
       expect(payload).toEqual({ userId: 1, username: 'testuser' });
-      expect(jwt.verify).toHaveBeenCalledWith('valid-token', process.env.SECRET_KEY);
+      expect(jwt.verify).toHaveBeenCalledWith(
+        'valid-token',
+        process.env.SECRET_KEY
+      );
     });
   });
 });
