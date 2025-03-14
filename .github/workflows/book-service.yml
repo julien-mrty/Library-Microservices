@@ -39,9 +39,6 @@ jobs:
         with:
           node-version: 20
 
-      # -----------------------------------------
-      # 1. Install + Start Auth Service
-      # -----------------------------------------
       - name: Install & Start Auth Service
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/auth-db
@@ -49,16 +46,11 @@ jobs:
         run: |
           cd auth-service
           npm install
-
-          # Explicitly generate Prisma client
-          npx prisma generate --schema=src/prisma/schema.prisma --output=./node_modules/.prisma/client
-
-          # Run migrations
-          npx prisma migrate deploy --name init --schema=src/prisma/schema.prisma
-
+          npx prisma generate --schema=src/prisma/schema.prisma
+          npx prisma migrate dev --name init --schema=src/prisma/schema.prisma
+          
           # Start server in background and capture PID
-          node server.js > auth-service.log 2>&1 &
-          echo $! > auth-service.pid
+          node server.js
 
           # Wait for Auth Service to become available
           for i in {1..10}; do
