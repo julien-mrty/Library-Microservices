@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: mydatabase
 
     ports:
-      - "5432:5432" 
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data # est-ce util d avoir deux volumes dans ce cas ?
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -22,9 +22,9 @@ services:
   auth-service:
     build:
       context: ./auth-service
-      
+
     container_name: auth-service
-    
+
     ports:
       - "5000:5000"
     env_file:
@@ -48,4 +48,4 @@ services:
       - postgres
 
 volumes:
-  pgdata: #pourquoi c'est vide ici ? que faudrai-il mettre ? 
+  pgdata: #pourquoi c'est vide ici ? que faudrai-il mettre ?

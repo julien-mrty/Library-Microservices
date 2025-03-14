@@ -25,7 +25,7 @@ async function getUserIdFromToken(req) {
     const authRes = await axios.get(`${AUTH_SERVICE_URL}/verify-token`, {
       headers: { Authorization: token },
     });
-    console.log("token : ", token)
+    console.log('token : ', token);
 
     //  Return the userId if valid
     return { userId: authRes.data.userId };

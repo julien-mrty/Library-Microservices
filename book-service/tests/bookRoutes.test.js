@@ -29,7 +29,10 @@ beforeAll(async () => {
     ) {
       console.log('⚠️ User already exists, proceeding to login...');
     } else {
-      console.error('🚨 Auth Setup Error:', error.response?.data || error.message);
+      console.error(
+        '🚨 Auth Setup Error:',
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
@@ -44,7 +47,10 @@ beforeAll(async () => {
     console.log('🔍 Generated Access Token:', accessToken);
     console.log('BC test AUTH_SERVICE_URL:', AUTH_SERVICE_URL);
   } catch (error) {
-    console.error('🚨 Auth Setup Error:', error.response?.data || error.message);
+    console.error(
+      '🚨 Auth Setup Error:',
+      error.response?.data || error.message
+    );
     throw error;
   }
 
@@ -75,13 +81,11 @@ describe('📚 Book Routes Tests (with Authentication)', () => {
   });
 
   test('❌ POST /api/books fails without a token', async () => {
-    const res = await request(app)
-      .post('/api/books')
-      .send({
-        title: 'Unauthorized Book',
-        author: 'Jane Doe',
-        year: 2025,
-      });
+    const res = await request(app).post('/api/books').send({
+      title: 'Unauthorized Book',
+      author: 'Jane Doe',
+      year: 2025,
+    });
 
     expect(res.status).toBe(401);
     expect(res.body.message).toBe('Unauthorized: Missing token');

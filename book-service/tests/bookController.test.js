@@ -33,12 +33,14 @@ describe('📚 Book Controller Tests (with Authentication)', () => {
   test('✅ getAllBooksPaginated returns paginated books (Authenticated User)', async () => {
     // Create multiple test books in the DB for userId=1
     await prisma.book.createMany({
-      data: Array(5).fill().map((_, i) => ({
-        title: `Paginated Book ${i}`,
-        author: 'Paginated Author',
-        year: 2000 + i,
-        userId: 1,
-      })),
+      data: Array(5)
+        .fill()
+        .map((_, i) => ({
+          title: `Paginated Book ${i}`,
+          author: 'Paginated Author',
+          year: 2000 + i,
+          userId: 1,
+        })),
     });
 
     // We simulate an incoming request
