@@ -125,7 +125,6 @@ exports.deleteBook = async (req, res) => {
   }
 };
 
-
 exports.getAllBooksPaginated = async (req, res) => {
   try {
     // Vérification du token et récupération de l'userId
@@ -139,22 +138,23 @@ exports.getAllBooksPaginated = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized: Invalid token' });
     }
 
-    
-    let page = parseInt(req.query.page) || 1;    
-    let limit = parseInt(req.query.limit) || 5; 
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 5;
     console.log(`Page: ${page}, Limit: ${limit}`);
-    const skip = (page - 1) * limit;            
+    const skip = (page - 1) * limit;
 
     // Récupération paginée des livres de l'utilisateur authentifié
     const [books, totalCount] = await Promise.all([
       prisma.book.findMany({
-        where: { userId },    // Filtrer uniquement les livres de l'utilisateur
+        where: { userId }, // Filtrer uniquement les livres de l'utilisateur
         skip: skip,
-        take: limit,          // Prendre uniquement le nombre spécifié de livres
+        take: limit, // Prendre uniquement le nombre spécifié de livres
         // orderBy: { createdAt: 'desc' } // Facultatif : si tu veux trier par date de création
       }),
-      console.log(await prisma.$executeRaw`SELECT * FROM Book LIMIT ${limit} OFFSET ${skip}`),
-      prisma.book.count({ where: { userId } })     // Nombre total de livres de cet utilisateur
+      console.log(
+        await prisma.$executeRaw`SELECT * FROM Book LIMIT ${limit} OFFSET ${skip}`
+      ),
+      prisma.book.count({ where: { userId } }), // Nombre total de livres de cet utilisateur
     ]);
 
     // Calcul du nombre total de pages

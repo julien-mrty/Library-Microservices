@@ -5,7 +5,7 @@ const {
   addBook,
   updateBook,
   deleteBook,
-  getAllBooksPaginated
+  getAllBooksPaginated,
 } = require('./bookController');
 const { createBookSchema } = require('./validationSchemas');
 const { updateBookSchema } = require('./validationSchemas');
