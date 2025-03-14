@@ -5,7 +5,7 @@ jest.mock('../src/utils/tokenUtils');
 
 describe('Authentication Middleware', () => {
   const mockRequest = (headers = {}) => ({
-    header: jest.fn((key) => headers[key]), // Fix: Implement header method
+    header: jest.fn((key) => headers[key]),
     user: null,
   });
 

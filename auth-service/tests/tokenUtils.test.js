@@ -8,19 +8,24 @@ describe('Token Utilities', () => {
 
       expect(jwt.sign).toHaveBeenCalledWith(
         { userId: 1, username: 'testuser' },
-        'your_secret_key',
+        process.env.SECRET_KEY,
         { expiresIn: '60m' }
       );
       expect(typeof tokens.accessToken).toBe('string');
+
+      expect(jwt.sign).toHaveBeenCalledWith(
+        { userId: 1, username: 'testuser' },
+        process.env.REFRESH_SECRET_KEY,
+        { expiresIn: '7d' }
+      );
     });
   });
 
   describe('verifyToken', () => {
     it('should verify valid tokens', () => {
       const payload = tokenUtils.verifyToken('valid-token');
-
       expect(payload).toEqual({ userId: 1, username: 'testuser' });
-      expect(jwt.verify).toHaveBeenCalledWith('valid-token', 'your_secret_key');
+      expect(jwt.verify).toHaveBeenCalledWith('valid-token', process.env.SECRET_KEY);
     });
   });
 });
