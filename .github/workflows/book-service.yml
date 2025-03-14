@@ -45,7 +45,7 @@ jobs:
       - name: Install & Start Auth Service
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/auth-db
-          NODE_ENV: development 
+          NODE_ENV: development
         run: |
           cd auth-service
           npm install
