@@ -21,7 +21,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: bookdb
+          POSTGRES_DB: book-db
         ports:
           - 5432:5432
         options: >-
@@ -49,18 +49,29 @@ jobs:
           cd auth-service
           npm install
 
+          NODE_ENV=production 
+
           # Explicitly generate Prisma client
           npx prisma generate --schema=src/prisma/schema.prisma
 
           # Run migrations
           npx prisma migrate dev --name init --schema=src/prisma/schema.prisma
 
-          # Start server with proper NODE_ENV
-          NODE_ENV=production PORT=5000 node server.js &
+          # Start server in background and capture PID
+          node server.js > auth-service.log 2>&1 &
+          echo $! > auth-service.pid
 
-          # Wait for auth service
-          curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:5000/health
-          echo "✅ Auth Service ready"
+          # Wait for Auth Service to become available
+          for i in {1..10}; do
+            if curl -s http://localhost:3000/health; then
+              echo "✅ Auth Service is up!"
+              break
+            fi
+            cat auth-service.log
+
+            echo "🚀 Waiting for Auth Service..."
+            sleep 3
+          done
           cd ..
 
       # -----------------------------------------
@@ -80,7 +91,7 @@ jobs:
 
       - name: Apply Database Migrations
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/book-db
         run: npx prisma migrate deploy
         working-directory: book-service
 
@@ -89,7 +100,7 @@ jobs:
       # -----------------------------------------
       - name: Run Tests
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
-          AUTH_SERVICE_URL: http://localhost:5000/api/auth
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/book-db
+          AUTH_SERVICE_URL: http://localhost:3000/api/auth
         run: npm test
         working-directory: book-service
