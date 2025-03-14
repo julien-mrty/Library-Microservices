@@ -161,11 +161,9 @@ exports.verifyToken = async (req, res) => {
 
     // Remove "Bearer " prefix if present
     const formattedToken = token.replace('Bearer ', '');
-    console.error('formattedToken : ', formattedToken);
 
     // Verify JWT Token
     const decoded = jwt.verify(formattedToken, SECRET_KEY);
-    console.error('decoded : ', decoded);
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
