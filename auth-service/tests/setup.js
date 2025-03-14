@@ -14,12 +14,12 @@ module.exports = {
 
 jest.mock('bcryptjs', () => ({
   hash: jest.fn().mockResolvedValue('hashed-password'),
-  compare: jest.fn().mockResolvedValue(true)
+  compare: jest.fn().mockResolvedValue(true),
 }));
 
 jest.mock('jsonwebtoken', () => ({
   sign: jest.fn(() => 'mock-token'),
-  verify: jest.fn(() => ({ userId: 1, username: 'testuser' }))
+  verify: jest.fn(() => ({ userId: 1, username: 'testuser' })),
 }));
 
 jest.mock('@prisma/client', () => {
@@ -27,8 +27,8 @@ jest.mock('@prisma/client', () => {
     PrismaClient: jest.fn().mockImplementation(() => ({
       user: {
         findUnique: jest.fn(),
-        create: jest.fn()
-      }
-    }))
+        create: jest.fn(),
+      },
+    })),
   };
 });

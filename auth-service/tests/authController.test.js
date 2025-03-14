@@ -16,7 +16,9 @@ describe('Auth Controller', () => {
         .send({ username: 'testuser', password: 'Testpass123!' });
 
       expect(response.status).toBe(201);
-      expect(response.body).toEqual({ message: 'User registered successfully' });
+      expect(response.body).toEqual({
+        message: 'User registered successfully',
+      });
     });
 
     it('should handle registration errors', async () => {
@@ -35,7 +37,7 @@ describe('Auth Controller', () => {
     it('should login successfully and return tokens', async () => {
       authService.login.mockResolvedValue({
         accessToken: 'access-token',
-        refreshToken: 'refresh-token'
+        refreshToken: 'refresh-token',
       });
 
       const response = await request(app)
@@ -44,7 +46,9 @@ describe('Auth Controller', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ accessToken: 'access-token' });
-      expect(response.headers['set-cookie'][0]).toContain('refreshToken=refresh-token');
+      expect(response.headers['set-cookie'][0]).toContain(
+        'refreshToken=refresh-token'
+      );
     });
   });
 });

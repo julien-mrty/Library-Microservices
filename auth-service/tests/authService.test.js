@@ -20,7 +20,10 @@ describe('Auth Service', () => {
       await authService.register('newuser', 'Testpass123!');
 
       expect(bcrypt.hash).toHaveBeenCalledWith('Testpass123!', 10);
-      expect(authRepository.createUser).toHaveBeenCalledWith('newuser', 'hashed-password');
+      expect(authRepository.createUser).toHaveBeenCalledWith(
+        'newuser',
+        'hashed-password'
+      );
     });
   });
 
@@ -29,18 +32,21 @@ describe('Auth Service', () => {
       authRepository.findUserByUsername.mockResolvedValue({
         id: 1,
         username: 'testuser',
-        password: 'hashed-password'
+        password: 'hashed-password',
       });
       tokenUtils.generateTokens.mockReturnValue({
         accessToken: 'access-token',
-        refreshToken: 'refresh-token'
+        refreshToken: 'refresh-token',
       });
 
       const result = await authService.login('testuser', 'Testpass123!');
 
       expect(result).toHaveProperty('accessToken');
       expect(result).toHaveProperty('refreshToken');
-      expect(bcrypt.compare).toHaveBeenCalledWith('Testpass123!', 'hashed-password');
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        'Testpass123!',
+        'hashed-password'
+      );
     });
   });
 });

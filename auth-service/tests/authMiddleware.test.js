@@ -5,20 +5,23 @@ jest.mock('../src/utils/tokenUtils');
 
 describe('Authentication Middleware', () => {
   const mockRequest = (headers = {}) => ({
-    header: jest.fn(key => headers[key]), // Fix: Implement header method
-    user: null
+    header: jest.fn((key) => headers[key]), // Fix: Implement header method
+    user: null,
   });
 
   const mockResponse = () => ({
     status: jest.fn().mockReturnThis(),
-    json: jest.fn()
+    json: jest.fn(),
   });
 
   const next = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    tokenUtils.verifyToken.mockImplementation(() => ({ userId: 1, username: 'testuser' }));
+    tokenUtils.verifyToken.mockImplementation(() => ({
+      userId: 1,
+      username: 'testuser',
+    }));
   });
 
   it('should allow access with valid token', () => {
@@ -43,7 +46,9 @@ describe('Authentication Middleware', () => {
     authenticateToken(req, res, next);
 
     expect(res.status).toHaveBeenCalledWith(403);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Invalid or expired token' });
+    expect(res.json).toHaveBeenCalledWith({
+      message: 'Invalid or expired token',
+    });
   });
 
   it('should require access token', () => {
