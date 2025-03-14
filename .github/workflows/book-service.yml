@@ -45,17 +45,16 @@ jobs:
       - name: Install & Start Auth Service
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/auth-db
+          NODE_ENV: development 
         run: |
           cd auth-service
           npm install
 
-          NODE_ENV=production 
-
           # Explicitly generate Prisma client
-          npx prisma generate --schema=src/prisma/schema.prisma
+          npx prisma generate --schema=src/prisma/schema.prisma --output=./node_modules/.prisma/client
 
           # Run migrations
-          npx prisma migrate dev --name init --schema=src/prisma/schema.prisma
+          npx prisma migrate deploy --name init --schema=src/prisma/schema.prisma
 
           # Start server in background and capture PID
           node server.js > auth-service.log 2>&1 &
@@ -63,7 +62,7 @@ jobs:
 
           # Wait for Auth Service to become available
           for i in {1..10}; do
-            if curl -s http://localhost:3000/health; then
+            if curl -s http://localhost:5000/health; then
               echo "✅ Auth Service is up!"
               break
             fi
@@ -86,7 +85,7 @@ jobs:
         working-directory: book-service
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: npx prisma generate --output=./node_modules/.prisma/client
         working-directory: book-service
 
       - name: Apply Database Migrations
@@ -101,6 +100,6 @@ jobs:
       - name: Run Tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/book-db
-          AUTH_SERVICE_URL: http://localhost:3000/api/auth
+          AUTH_SERVICE_URL: http://localhost:5000/api/auth
         run: npm test
         working-directory: book-service
