@@ -48,16 +48,16 @@ jobs:
         run: |
           cd auth-service
           npm install
-          
+
           # Explicitly generate Prisma client
           npx prisma generate --schema=src/prisma/schema.prisma
-          
+
           # Run migrations
           npx prisma migrate dev --name init --schema=src/prisma/schema.prisma
-          
+
           # Start server with proper NODE_ENV
           NODE_ENV=production PORT=5000 node server.js &
-          
+
           # Wait for auth service
           curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:5000/health
           echo "✅ Auth Service ready"
