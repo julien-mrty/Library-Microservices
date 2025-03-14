@@ -13,29 +13,42 @@ jest.setTimeout(30000); // Increase timeout if needed
 beforeAll(async () => {
   console.log('🚀 Checking if Auth Service is running...');
 
-  // ✅ Register & Login to get token
+  // Attempt to register a test user
   try {
     await axios.post(`${AUTH_SERVICE_URL}/register`, {
       username: 'testuser',
       password: 'testpassword',
     });
+    console.log('✅ User registered successfully');
+  } catch (error) {
+    // If the user already exists, we simply proceed to login
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.message === 'User already exists'
+    ) {
+      console.log('⚠️ User already exists, proceeding to login...');
+    } else {
+      console.error('🚨 Auth Setup Error:', error.response?.data || error.message);
+      throw error;
+    }
+  }
 
+  // Attempt to log in and retrieve an access token
+  try {
     const loginRes = await axios.post(`${AUTH_SERVICE_URL}/login`, {
       username: 'testuser',
       password: 'testpassword',
     });
-
     accessToken = loginRes.data.accessToken;
     console.log('🔍 Generated Access Token:', accessToken);
     console.log('BC test AUTH_SERVICE_URL:', AUTH_SERVICE_URL);
   } catch (error) {
-    console.error(
-      '🚨 Auth Setup Error:',
-      error.response?.data || error.message
-    );
+    console.error('🚨 Auth Setup Error:', error.response?.data || error.message);
     throw error;
   }
 
+  // Clean up book records before tests
   await prisma.book.deleteMany();
 });
 
@@ -62,11 +75,13 @@ describe('📚 Book Routes Tests (with Authentication)', () => {
   });
 
   test('❌ POST /api/books fails without a token', async () => {
-    const res = await request(app).post('/api/books').send({
-      title: 'Unauthorized Book',
-      author: 'Jane Doe',
-      year: 2025,
-    });
+    const res = await request(app)
+      .post('/api/books')
+      .send({
+        title: 'Unauthorized Book',
+        author: 'Jane Doe',
+        year: 2025,
+      });
 
     expect(res.status).toBe(401);
     expect(res.body.message).toBe('Unauthorized: Missing token');
@@ -78,6 +93,7 @@ describe('📚 Book Routes Tests (with Authentication)', () => {
       .set('Authorization', `Bearer ${accessToken}`);
 
     expect(res.status).toBe(200);
+    // We expect at least 1 book because we added one
     expect(res.body.length).toBeGreaterThan(0);
   });
 

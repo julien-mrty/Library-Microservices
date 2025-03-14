@@ -25,6 +25,7 @@ async function getUserIdFromToken(req) {
     const authRes = await axios.get(`${AUTH_SERVICE_URL}/verify-token`, {
       headers: { Authorization: token },
     });
+    console.log("token : ", token)
 
     //  Return the userId if valid
     return { userId: authRes.data.userId };
@@ -151,9 +152,6 @@ exports.getAllBooksPaginated = async (req, res) => {
         take: limit, // Prendre uniquement le nombre spécifié de livres
         // orderBy: { createdAt: 'desc' } // Facultatif : si tu veux trier par date de création
       }),
-      console.log(
-        await prisma.$executeRaw`SELECT * FROM Book LIMIT ${limit} OFFSET ${skip}`
-      ),
       prisma.book.count({ where: { userId } }), // Nombre total de livres de cet utilisateur
     ]);
 

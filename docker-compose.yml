@@ -11,9 +11,9 @@ services:
       POSTGRES_DB: mydatabase
 
     ports:
-      - "5432:5432" # Pour exposer Postgres en local si besoin
+      - "5432:5432" 
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data # est-ce util d avoir deux volumes dans ce cas ?
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   ################################################################
@@ -22,16 +22,13 @@ services:
   auth-service:
     build:
       context: ./auth-service
-      # dockerfile: Dockerfile  # (par défaut "Dockerfile")
+      
     container_name: auth-service
-    # on monte le port local 5000 => conteneur 5000
+    
     ports:
       - "5000:5000"
     env_file:
       - ./auth-service/.env.dev
-    # On peut forcer/écraser des variables ci-dessous si on veut :
-    # environment:
-    #   DATABASE_URL: "postgres://myuser:mypassword@postgres:5432/authdb"
     depends_on:
       - postgres
 
@@ -46,11 +43,9 @@ services:
       - "5001:5001"
     env_file:
       - ./book-service/.env.dev
-    # environment:
-    #   DATABASE_URL: "postgres://myuser:mypassword@postgres:5432/bookdb"
     depends_on:
       - auth-service
       - postgres
 
 volumes:
-  pgdata:
+  pgdata: #pourquoi c'est vide ici ? que faudrai-il mettre ? 
