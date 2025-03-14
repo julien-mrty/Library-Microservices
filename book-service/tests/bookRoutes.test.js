@@ -1,3 +1,4 @@
+// tests/bookRoutes.test.js
 const request = require('supertest');
 const app = require('../app'); // Book Service App
 const prisma = require('./setup');
@@ -13,18 +14,35 @@ jest.setTimeout(30000); // Increase timeout if needed
 beforeAll(async () => {
   console.log('🚀 Checking if Auth Service is running...');
 
-  // ✅ Register & Login to get token
+  // Attempt to register a test user
   try {
     await axios.post(`${AUTH_SERVICE_URL}/register`, {
       username: 'testuser',
       password: 'testpassword',
     });
+    console.log('✅ User registered successfully');
+  } catch (error) {
+    // Check if the Auth Service error matches "User already exists"
+    const errorMessage = error.response?.data?.message || '';
 
+    // We do a loose check in case the Auth Service text is slightly different
+    if (errorMessage.toLowerCase().includes('user already exist')) {
+      console.log('⚠️ User already exists, proceeding to login...');
+    } else {
+      console.error(
+        '🚨 Auth Setup Error:',
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+
+  // Attempt to log in and retrieve an access token
+  try {
     const loginRes = await axios.post(`${AUTH_SERVICE_URL}/login`, {
       username: 'testuser',
       password: 'testpassword',
     });
-
     accessToken = loginRes.data.accessToken;
     console.log('🔍 Generated Access Token:', accessToken);
     console.log('BC test AUTH_SERVICE_URL:', AUTH_SERVICE_URL);
@@ -36,6 +54,7 @@ beforeAll(async () => {
     throw error;
   }
 
+  // Clean up book records before tests
   await prisma.book.deleteMany();
 });
 
@@ -78,7 +97,21 @@ describe('📚 Book Routes Tests (with Authentication)', () => {
       .set('Authorization', `Bearer ${accessToken}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.length).toBeGreaterThan(0);
+
+    // The controller returns an object with { data, currentPage, totalPages, totalCount, limit }
+    // So we check "res.body.data" instead of "res.body"
+    expect(res.body.data).toBeInstanceOf(Array);
+    expect(res.body.data.length).toBeGreaterThan(0);
+
+    // Optional: check pagination shape
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        currentPage: expect.any(Number),
+        totalPages: expect.any(Number),
+        totalCount: expect.any(Number),
+        limit: expect.any(Number),
+      })
+    );
   });
 
   test('✅ PUT /api/books/:id updates a book (Owned by User)', async () => {
@@ -102,9 +135,11 @@ describe('📚 Book Routes Tests (with Authentication)', () => {
       .send({
         title: 'Hacker Update',
         author: 'Hacker',
-        year: 2099,
+        year: 2019,
       });
 
+    // If your Auth Service returns 400 for invalid tokens, update this to expect(400)
+    // If it returns 403, keep as is. Make sure your Auth Service is consistent!
     expect(res.status).toBe(403);
     expect(res.body.message).toBe('Unauthorized: Invalid token');
   });
@@ -123,6 +158,7 @@ describe('📚 Book Routes Tests (with Authentication)', () => {
       .delete(`/api/books/${bookId}`)
       .set('Authorization', 'Bearer invalidToken');
 
+    // Same note as above: check if your Auth Service actually returns 403 or 400 for invalid tokens
     expect(res.status).toBe(403);
     expect(res.body.message).toBe('Unauthorized: Invalid token');
   });

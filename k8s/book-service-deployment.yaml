@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: book-service
-          image: book-service:latest
+          image: 77771603/book-service:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: NODE_ENV

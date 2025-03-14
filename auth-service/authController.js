@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('./prismaClient'); // Import Prisma
 const dotenv = require('dotenv');
+const { userOutputSchema } = require('./validationSchemas'); // <= Schéma de validation de sortie
 require('dotenv').config();
 
 // Determine the environment
@@ -35,14 +36,33 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Store user in database
-    await prisma.user.create({
+    const newUser = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
       },
     });
 
-    res.status(201).json({ message: 'User registered successfully' });
+    // On construit l'objet renvoyé
+    const userToOutput = {
+      id: newUser.id,
+      username: newUser.username,
+    };
+
+    // Validation de la sortie via userOutputSchema
+    const { error } = userOutputSchema.validate(userToOutput);
+    if (error) {
+      // Log l'erreur pour debug
+      console.error('[Output validation error]', error.details);
+      // On renvoie un 500 car la sortie ne correspond pas à notre contrat
+      return res.status(500).json({
+        message: 'Server error: output validation failed',
+        details: error.details.map((d) => d.message),
+      });
+    }
+
+    // Si tout est bon, on renvoie l'objet validé
+    return res.status(201).json(userToOutput);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });

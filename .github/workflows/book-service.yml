@@ -45,6 +45,7 @@ jobs:
       - name: Install & Start Auth Service
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/auth-db
+          NODE_ENV: development
         run: |
           cd auth-service
           npm install
@@ -81,7 +82,8 @@ jobs:
 
       - name: Apply Database Migrations
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/book-db
+          NODE_ENV: development
         run: npx prisma migrate deploy
         working-directory: book-service
 
@@ -90,7 +92,8 @@ jobs:
       # -----------------------------------------
       - name: Run Tests
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bookdb
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/book-db
           AUTH_SERVICE_URL: http://localhost:5000/api/auth
+          NODE_ENV: development
         run: npm test
         working-directory: book-service

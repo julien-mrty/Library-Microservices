@@ -8,10 +8,14 @@ const {
 } = require('./authController');
 const { authenticateToken } = require('./authMiddleware');
 
+const { registerSchema, loginSchema } = require('./validationSchemas');
+const { validate } = require('./validationMiddleware');
+
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', validate(registerSchema), register);
+router.post('/login', validate(loginSchema), login);
+
 router.post('/refresh', refreshToken); // Refresh token endpoint
 router.post('/logout', logout);
 router.get('/verify-token', verifyToken);

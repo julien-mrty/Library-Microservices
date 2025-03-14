@@ -1,0 +1,51 @@
+services:
+  ################################################################
+  # 1. POSTGRES
+  ################################################################
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data # est-ce util d avoir deux volumes dans ce cas ?
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  ################################################################
+  # 2. AUTH-SERVICE
+  ################################################################
+  auth-service:
+    build:
+      context: ./auth-service
+
+    container_name: auth-service
+
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./auth-service/.env.dev
+    depends_on:
+      - postgres
+
+  ################################################################
+  # 3. BOOK-SERVICE
+  ################################################################
+  book-service:
+    build:
+      context: ./book-service
+    container_name: book-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./book-service/.env.dev
+    depends_on:
+      - auth-service
+      - postgres
+
+volumes:
+  pgdata: #pourquoi c'est vide ici ? que faudrai-il mettre ?
