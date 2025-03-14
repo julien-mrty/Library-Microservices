@@ -5,7 +5,8 @@
   "scripts": {
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
-    "test": "npm run prisma:generate --schema=src/prisma/schema.prisma && jest",
+    "test": "npx prisma generate --schema=src/prisma/schema.prisma && jest --coverage",
+    "test:watch": "jest --watch",
     "start": "node server.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

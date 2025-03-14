@@ -1,6 +1,5 @@
-require('dotenv').config(); // Load environment variables
-
 module.exports = {
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['./tests/setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/prisma/']
 };
