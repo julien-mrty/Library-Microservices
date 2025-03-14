@@ -24,7 +24,7 @@ beforeAll(async () => {
   } catch (error) {
     // Check if the Auth Service error matches "User already exists"
     const errorMessage = error.response?.data?.message || '';
-    
+
     // We do a loose check in case the Auth Service text is slightly different
     if (errorMessage.toLowerCase().includes('user already exist')) {
       console.log('⚠️ User already exists, proceeding to login...');

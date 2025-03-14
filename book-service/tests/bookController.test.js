@@ -43,12 +43,14 @@ describe('📚 Book Controller Tests (with Real DB)', () => {
   test('✅ getAllBooksPaginated returns paginated books (Authenticated User)', async () => {
     // Insert multiple books for the same userId=1
     await prisma.book.createMany({
-      data: Array(5).fill().map((_, i) => ({
-        title: `Paginated Book ${i}`,
-        author: 'Paginated Author',
-        year: 1000 + i,
-        userId: 1,
-      })),
+      data: Array(5)
+        .fill()
+        .map((_, i) => ({
+          title: `Paginated Book ${i}`,
+          author: 'Paginated Author',
+          year: 1000 + i,
+          userId: 1,
+        })),
     });
 
     // Simulate a request object with a valid "Bearer validToken"
@@ -67,7 +69,7 @@ describe('📚 Book Controller Tests (with Real DB)', () => {
     // We expect a success response with the paginated structure
     expect(mockRes.json).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: expect.any(Array),  // The paginated books
+        data: expect.any(Array), // The paginated books
         currentPage: 1,
         totalPages: expect.any(Number),
         totalCount: expect.any(Number),
