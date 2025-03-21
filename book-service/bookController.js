@@ -1,6 +1,7 @@
 const prisma = require('./prismaClient');
 const axios = require('axios');
 const dotenv = require('dotenv');
+const Joi = require('joi');
 
 // Determine the environment
 const envFile =
@@ -126,12 +127,19 @@ exports.deleteBook = async (req, res) => {
   }
 };
 
+// Validation schema for query params (Joi)
+const paginationFilterSchema = Joi.object({
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(100).default(5),
+  title: Joi.string().optional(),
+  author: Joi.string().optional(),
+  year: Joi.number().integer().optional(),
+});
+
 exports.getAllBooksPaginated = async (req, res) => {
   try {
-    // Vérification du token et récupération de l'userId
+    // 1) Validate the token, get userId
     const { userId, error } = await getUserIdFromToken(req);
-
-    // Gestion des erreurs liées au token
     if (error === 'missingToken') {
       return res.status(401).json({ message: 'Unauthorized: Missing token' });
     }
@@ -139,35 +147,61 @@ exports.getAllBooksPaginated = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized: Invalid token' });
     }
 
-    let page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 5;
+    // 2) Validate query params with Joi
+    const { error: joiError, value } = paginationFilterSchema.validate(
+      req.query,
+      {
+        abortEarly: false, // Collect all errors if any
+      }
+    );
+    if (joiError) {
+      // Return 400 with details about which params are invalid
+      return res.status(400).json({
+        message: 'Invalid query parameters',
+        details: joiError.details.map((d) => d.message),
+      });
+    }
+
+    // 3) Extract validated fields
+    const { page, limit, title, author, year } = value;
     console.log(`Page: ${page}, Limit: ${limit}`);
+
     const skip = (page - 1) * limit;
 
-    // Récupération paginée des livres de l'utilisateur authentifié
+    // 4) Build dynamic filter
+    const filter = { userId };
+    if (title) {
+      filter.title = { contains: title, mode: 'insensitive' };
+    }
+    if (author) {
+      filter.author = { contains: author, mode: 'insensitive' };
+    }
+    if (year) {
+      filter.year = parseInt(year, 10); // exact match
+    }
+
+    // 5) Fetch paginated and count
     const [books, totalCount] = await Promise.all([
       prisma.book.findMany({
-        where: { userId }, // Filtrer uniquement les livres de l'utilisateur
+        where: filter,
         skip: skip,
-        take: limit, // Prendre uniquement le nombre spécifié de livres
-        // orderBy: { createdAt: 'desc' } // Facultatif : si tu veux trier par date de création
+        take: limit,
       }),
-      prisma.book.count({ where: { userId } }), // Nombre total de livres de cet utilisateur
+      prisma.book.count({ where: filter }),
     ]);
 
-    // Calcul du nombre total de pages
     const totalPages = Math.ceil(totalCount / limit);
 
-    // Réponse avec les données paginées
+    // 6) Return paginated result
     return res.json({
       data: books,
       currentPage: page,
-      totalPages: totalPages,
-      totalCount: totalCount,
-      limit: limit,
+      totalPages,
+      totalCount,
+      limit,
     });
   } catch (error) {
     console.error('[getAllBooksPaginated] Error:', error);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
