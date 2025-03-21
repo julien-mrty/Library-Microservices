@@ -148,9 +148,12 @@ exports.getAllBooksPaginated = async (req, res) => {
     }
 
     // 2) Validate query params with Joi
-    const { error: joiError, value } = paginationFilterSchema.validate(req.query, {
-      abortEarly: false, // Collect all errors if any
-    });
+    const { error: joiError, value } = paginationFilterSchema.validate(
+      req.query,
+      {
+        abortEarly: false, // Collect all errors if any
+      }
+    );
     if (joiError) {
       // Return 400 with details about which params are invalid
       return res.status(400).json({
