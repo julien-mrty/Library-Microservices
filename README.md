@@ -1,4 +1,3 @@
-```markdown
 # Service-Oriented Architecture (SOA) – Library Microservices
 
 A **Microservices Library System** built with Node.js, following a Service-Oriented Architecture (SOA). Each microservice handles a specific domain — for example, **Auth** for user authentication/authorization, and **Book** for managing library books. This design ensures clear separation of concerns and scalability.
@@ -79,10 +78,11 @@ The system is **containerized** with Docker and can be deployed with **Kubernete
 ### Installation
 
 1. **Clone the repository**:
+
 ```bash
    git clone https://github.com/your-repo/service-oriented-architecture.git
    cd service-oriented-architecture
-   ```
+```
 
 2. **Install dependencies for each service**:
 
@@ -90,15 +90,14 @@ The system is **containerized** with Docker and can be deployed with **Kubernete
    cd auth-service/
    npm install
 
-   cd ../book-service/
+   cd book-service/
    npm install
 
-   cd ..
-   ```
+```
 
 ### Environment Files (.env)
 
-Inside **auth-service** and **book-service**, you need two files: **.env.dev** and **.env.prod**. 
+Inside **auth-service** and **book-service**, you need two files: **.env.dev** and **.env.prod**.
 
 #### auth-service/.env.dev
 
@@ -141,11 +140,13 @@ NODE_ENV=production
 ### Migrations
 
 1. **Install** `dotenv-cli` globally:
+
 ```bash
    npm install -g dotenv-cli
-   ```
+```
 
 2. **Run Prisma migrations** for each service:
+
    ```bash
    # in auth-service/
    dotenv -e .env.dev -- npx prisma migrate dev --name init
@@ -153,6 +154,7 @@ NODE_ENV=production
    # in book-service/
    dotenv -e .env.dev -- npx prisma migrate dev --name init
    ```
+
    This applies initial database structure to your PostgreSQL.
 
 ### Running with Docker Compose
@@ -160,6 +162,7 @@ NODE_ENV=production
 From the **root folder** (where `docker-compose.yml` is):
 
 1. **Build and run**:
+
    ```bash
    docker compose build
    docker compose up
@@ -210,6 +213,7 @@ Use the built-in **Try it out** feature to send requests.
 ### Using Swagger UI
 
 - For **Auth Service** swagger: open [http://localhost:5000/api-docs](http://localhost:5000/api-docs).
+
   - **POST /register**, **POST /login**, etc.
   - You can click **Try it out**, enter the required JSON body, and see the response.
 
@@ -220,11 +224,12 @@ Use the built-in **Try it out** feature to send requests.
 ### Using Postman
 
 1. **Auth Service**:
+
    - **POST** `http://localhost:5000/api/auth/login`
    - In the Body → Raw → JSON:
      ```json
-     { 
-       "username": "test", 
+     {
+       "username": "test",
        "password": "test"
      }
      ```
@@ -240,7 +245,6 @@ Use the built-in **Try it out** feature to send requests.
 
 ---
 
-
 ## Kubernetes Deployment
 
 ### Minikube Setup
@@ -248,13 +252,15 @@ Use the built-in **Try it out** feature to send requests.
 1. Install **Minikube** if needed: [Minikube Installation Guide](https://minikube.sigs.k8s.io/docs/start/)
 2. Install **kubectl**: [kubectl Installation Guide](https://kubernetes.io/docs/tasks/tools/)
 3. Start Minikube:
+
 ```bash
    minikube start
-   ```
+```
 
 ### Using the Deployment Scripts
 
 1. **deploy_postgres_to_minikube.ps1**
+
    - Deletes old PostgreSQL resources
    - Applies `postgres-configmap.yaml` and `postgres-deployment.yaml`
    - Run it in **PowerShell**:
@@ -263,14 +269,17 @@ Use the built-in **Try it out** feature to send requests.
      ```
 
 2. **deploy_services_to_minikube.ps1**
+
    - Builds/pushes auth-service & book-service Docker images to your minikube environment
    - Applies `auth-service-deployment.yaml` and `book-service-deployment.yaml`
    - Then shows pods/services
+
    ```powershell
    ./deploy_services_to_minikube.ps1
    ```
 
 3. **Check**:
+
    ```powershell
    kubectl get pods
    kubectl get svc
@@ -290,16 +299,19 @@ You can integrate this with a CI/CD pipeline (e.g., **GitHub Actions**). Each mi
 
 ## Contributing
 
-Contributions are welcome!  
-1. **Fork** the repo  
-2. **Create** a feature branch  
-3. **Commit** & push your changes  
-4. **Open** a pull request  
+Contributions are welcome!
+
+1. **Fork** the repo
+2. **Create** a feature branch
+3. **Commit** & push your changes
+4. **Open** a pull request
 
 ---
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+```
 
 ```
