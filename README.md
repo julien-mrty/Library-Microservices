@@ -182,8 +182,6 @@ From the **root folder** (where `docker-compose.yml` is):
    - **Auth**: [http://localhost:5000](http://localhost:5000)
    - **Book**: [http://localhost:5001](http://localhost:5001)
 
-
-
 ## API Documentation
 
 Each microservice has its own **Swagger UI**:
