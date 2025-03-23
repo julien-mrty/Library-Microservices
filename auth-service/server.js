@@ -12,8 +12,8 @@ dotenv.config({ path: envFile });
 const port = process.env.PORT;
 
 const server = app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-  console.log(`Swagger UI available at http://localhost:${port}/api-docs`);
+  console.log(`Auth Server is running on http://localhost:${port}`);
+  console.log(`Auth Swagger UI available at http://localhost:${port}/api-docs`);
 });
 
 // Handle unexpected errors
