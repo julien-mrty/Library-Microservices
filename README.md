@@ -1,6 +1,6 @@
-# Service-Oriented Architecture (SOA) - Library System
+# Service-Oriented Architecture (SOA) – Library Microservices
 
-A **Microservices Library System** built with Node.js, leveraging a Service-Oriented Architecture (SOA). Each microservice handles a specific domain, ensuring clear separation of concerns and scalability.
+A **Microservices Library System** built with Node.js, following a Service-Oriented Architecture (SOA). Each microservice handles a specific domain — for example, **Auth** for user authentication/authorization, and **Book** for managing library books. This design ensures clear separation of concerns and scalability.
 
 ---
 
@@ -12,53 +12,57 @@ A **Microservices Library System** built with Node.js, leveraging a Service-Orie
 4. [Getting Started](#getting-started)
    - [Prerequisites](#prerequisites)
    - [Installation](#installation)
-   - [Running the Application](#running-the-application)
-5. [Database Setup](#database-setup)
-   - [Running PostgreSQL in Docker](#running-postgresql-in-docker)
-   - [Connecting to PostgreSQL](#connecting-to-postgresql)
-6. [Migrations](#migrations)
-7. [Linting and Formatting](#linting-and-formatting)
-8. [Deployment](#deployment)
-   - [Docker](#docker)
-   - [Kubernetes](#kubernetes)
-9. [CI/CD with GitHub Actions](#cicd-with-github-actions)
-10. [API Documentation](#api-documentation)
-11. [Contributing](#contributing)
-12. [License](#license)
+   - [Environment Files (.env)](#environment-files-env)
+   - [Migrations](#migrations)
+   - [Running with Docker Compose](#running-with-docker-compose)
+   - [Alternative: Pulling Images from Docker Hub](#alternative-pulling-images-from-docker-hub)
+5. [API Documentation](#api-documentation)
+6. [Testing Endpoints](#testing-endpoints)
+   - [Using Swagger UI](#using-swagger-ui)
+   - [Using Postman](#using-postman)
+7. [Pushing Your Own Images to Docker Hub](#pushing-your-own-images-to-docker-hub)
+8. [Kubernetes Deployment](#kubernetes-deployment)
+   - [Minikube Setup](#minikube-setup)
+   - [Using the Deployment Scripts](#using-the-deployment-scripts)
+9. [CI/CD](#cicd)
+10. [Contributing](#contributing)
+11. [License](#license)
 
 ---
 
 ## Overview
 
-This project is a **Library Management System** built using a microservices architecture. Each service is responsible for a specific domain:
+This **Library Management System** demonstrates a microservices approach:
 
-- **Authentication Service**: Manages user authentication and authorization.
-- **Book Service**: Handles book-related data.
+- **Auth Service**: Manages user authentication (JWT-based) and authorization.
+- **Book Service**: Manages book-related data and integrates with the Auth service.
 
-The system is designed to be **scalable**, **secure**, and **easy to maintain**.
+The system is **containerized** with Docker and can be deployed with **Kubernetes**, making it scalable and portable.
 
 ---
 
 ## Tech Stack
 
-- **Backend**: Node.js, Express
-- **Database**: PostgreSQL
-- **Validation**: Joi
-- **API Documentation**: OpenAPI (Swagger)
-- **Containerization**: Docker
-- **Orchestration**: Kubernetes
-- **CI/CD**: GitHub Actions
+- **Node.js** (>= v18)
+- **Express**
+- **PostgreSQL**
+- **Docker** for containerization
+- **Kubernetes** (Minikube) for local orchestration
+- **Joi** (validation)
+- **OpenAPI/Swagger** (API docs)
+- **Prisma** (ORM for migrations)
 
 ---
 
 ## Features
 
-- **Microservices Architecture**: Clear separation of concerns with independent services.
-- **Secure Authentication**: JWT-based authentication and role-based access control.
-- **API Documentation**: Fully documented APIs using OpenAPI.
-- **Validation**: Robust schema validation with Joi.
-- **Scalable Deployment**: Containerized with Docker and orchestrated with Kubernetes.
-- **Automated CI/CD**: Streamlined development with GitHub Actions.
+1. **Separation of Concerns**: Auth and Book services run independently.
+2. **JWT Authentication**: Secure login, register, and token validation.
+3. **OpenAPI Docs**: Each microservice has its own Swagger UI for testing.
+4. **Database**: PostgreSQL container, easily replaceable or scalable.
+5. **Automated Migrations**: Via Prisma’s CLI.
+6. **Kubernetes Deployment**: Provided scripts for Minikube environment.
+7. **Automated CI/CD**: Streamlined development with GitHub Actions.
 
 ---
 
@@ -66,237 +70,233 @@ The system is designed to be **scalable**, **secure**, and **easy to maintain**.
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- Docker
-- Kubernetes (Minikube for local development)
-- PostgreSQL
+- **Node.js** (v18+)
+- **Docker** (Desktop or CLI)
+- **PostgreSQL** (run via Docker)
+- **Minikube** (if you want to deploy to Kubernetes locally)
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
+1. **Clone the repository**:
+
+```bash
    git clone https://github.com/your-repo/service-oriented-architecture.git
    cd service-oriented-architecture
-   ```
-2. Install dependencies for all services:
-   ```bash
+```
+
+2. **Install dependencies for each service**:
+
+```bash
+   cd auth-service/
    npm install
-   ```
 
-### Running the Application
+   cd book-service/
+   npm install
 
-Start the services:
-
-```bash
-npm start
 ```
 
-Access the services:
+### Environment Files (.env)
 
-- **Auth Service**: `http://localhost:3000`
-- **Book Service**: `http://localhost:3001`
+Inside **auth-service** and **book-service**, you need two files: **.env.dev** and **.env.prod**.
 
----
+#### auth-service/.env.dev
 
-## Database Setup
-
-### Running PostgreSQL in Docker
-
-Start a PostgreSQL container:
-
-```bash
-docker run --name postgres-dev -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydatabase -p 5432:5432 -d postgres
+```
+DATABASE_URL=postgres://myuser:mypassword@postgres:5432/auth-db
+PORT=5000
+SECRET_KEY=your_secret_key
+REFRESH_SECRET_KEY=your_refresh_secret
+NODE_ENV=development
 ```
 
-Start an existing container:
+#### auth-service/.env.prod
 
-```bash
-docker start postgres-dev
+```
+PORT=3000
+SECRET_KEY=your_secret_key
+REFRESH_SECRET_KEY=your_refresh_secret
+NODE_ENV=production
 ```
 
-### Connecting to PostgreSQL
+#### book-service/.env.dev
 
-Connect to the PostgreSQL container:
-
-```bash
-docker exec -it postgres-dev psql -U myuser -d mydatabase
+```
+DATABASE_URL=postgres://myuser:mypassword@postgres:5432/book-db
+PORT=5001
+AUTH_SERVICE_URL=http://auth-service:5000/api/auth
+NODE_ENV=development
+SECRET_KEY=your_secret_key
+REFRESH_SECRET_KEY=your_refresh_secret
 ```
 
----
+#### book-service/.env.prod
 
-## Migrations
+```
+PORT=3001
+AUTH_SERVICE_URL=http://auth:3000/api/auth
+NODE_ENV=production
+```
 
-To apply database migrations:
+### Migrations
 
-1. Install `dotenv-cli`:
-   ```bash
+1. **Install** `dotenv-cli` globally:
+
+```bash
    npm install -g dotenv-cli
-   ```
-2. Run migrations for development:
+```
+
+2. **Run Prisma migrations** for each service:
+
    ```bash
+   # in auth-service/
+   dotenv -e .env.dev -- npx prisma migrate dev --name init
+
+   # in book-service/
    dotenv -e .env.dev -- npx prisma migrate dev --name init
    ```
 
----
+   This applies initial database structure to your PostgreSQL.
 
-## Linting and Formatting
+### Running with Docker Compose
 
-This project uses Prettier for code formatting and Husky for pre-commit hooks.
+From the **root folder** (where `docker-compose.yml` is):
 
-Install Prettier:
+1. **Build and run**:
 
-```bash
-npm install --save-dev prettier
-```
+   ```bash
+   docker compose build
+   docker compose up
+   ```
 
-Set up Husky:
+2. **Check logs**: You should see something like:
+   ```
+   All migrations have been successfully applied.
+   auth-service  | Server is running on http://localhost:5000
+   auth-service  | Swagger UI available at http://localhost:5000/api-docs
+   book-service  | Book Service running on http://localhost:5001
+   book-service  | Swagger UI available at http://localhost:5001/api-docs
+   ```
+3. **Verify** in Docker Desktop or `docker ps`.
 
-```bash
-npm install --save-dev husky
-npx husky init
-npx husky add .husky/pre-commit "npx prettier --write ."
-git config core.hooksPath .husky
-```
-
----
-
-## Kubernetes Deployment Guide
-
-## Prerequisites
-
-To deploy our solution using Kubernetes with Minikube, developers must install the following tools:
-
-### 1. Install Minikube
-
-Minikube allows you to run Kubernetes clusters locally.
-
-- Download and install Minikube from the official website: [Minikube Installation Guide](https://minikube.sigs.k8s.io/docs/start/)
-- Ensure Minikube is correctly installed by running:
-  ```bash
-  minikube version
-  ```
-
-### 2. Install kubectl
-
-kubectl is the command-line tool used to interact with Kubernetes clusters.
-
-- Install kubectl by following the guide: [kubectl Installation Guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- Verify installation:
-  ```bash
-  kubectl version --client
-  ```
-
-### 3. Start Minikube
-
-Once Minikube and kubectl are installed, start a Minikube cluster:
-
-```bash
-minikube start
-```
-
-## How to Use Deployment Scripts
-
-### 1. `deploy_postgres_to_minikube.ps1`
-
-#### Description
-
-This script deletes any existing PostgreSQL resources in the Minikube cluster and redeploys PostgreSQL using Kubernetes configuration files.
-
-#### What It Does
-
-- Deletes the existing PostgreSQL deployment and persistent volume claim (PVC)
-- Applies the PostgreSQL ConfigMap and Deployment configuration files
-- Checks the status of the PostgreSQL pods
-
-#### When to Use
-
-Use this script when you need to reset the PostgreSQL database or apply changes to its configuration.
-
-#### Usage
-
-Run the script in a PowerShell terminal:
-
-```powershell
-./deploy_postgres_to_minikube.ps1
-```
-
----
-
-### 2. `deploy_services_to_minikube.ps1`
-
-#### Description
-
-This script deploys the authentication and book services to the Minikube cluster.
-
-#### What It Does
-
-- Deletes existing service pods
-- Removes old Docker images from Minikube
-- Builds new Docker images for the services
-- Loads the new images into Minikube
-- Applies the Kubernetes deployment configurations for each service
-- Displays the status of pods and services
-
-#### When to Use
-
-Use this script when updating the authentication or book services, such as after modifying the codebase or Docker images.
-
-#### Usage
-
-Run the script in a PowerShell terminal:
-
-```powershell
-./deploy_services_to_minikube.ps1
-```
-
-Once executed, you can check the status of your services using:
-
-```powershell
-kubectl get pods
-kubectl get svc
-minikube service list
-```
-
-This ensures that the services are running and accessible within the Minikube cluster.
-
----
-
-## CI/CD with GitHub Actions
-
-This project uses **GitHub Actions** for automated testing and deployment. Workflows are defined in `.github/workflows/`.
-
----
+4. **Visit**:
+   - **Auth**: [http://localhost:5000](http://localhost:5000)
+   - **Book**: [http://localhost:5001](http://localhost:5001)
 
 ## API Documentation
 
-API documentation is generated using OpenAPI (Swagger). Access the Swagger UI at:
+Each microservice has its own **Swagger UI**:
 
-- **Auth Service**: `http://localhost:3000/api-docs`
-- **Book Service**: `http://localhost:3001/api-docs`
+- **Auth Service**: [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
+- **Book Service**: [http://localhost:5001/api-docs](http://localhost:5001/api-docs)
+
+Use the built-in **Try it out** feature to send requests.
+
+---
+
+## Testing Endpoints
+
+### Using Swagger UI
+
+- For **Auth Service** swagger: open [http://localhost:5000/api-docs](http://localhost:5000/api-docs).
+
+  - **POST /register**, **POST /login**, etc.
+  - You can click **Try it out**, enter the required JSON body, and see the response.
+
+- For **Book Service** swagger: open [http://localhost:5001/api-docs](http://localhost:5001/api-docs).
+  - **POST /books** with `{ "title": "some", "author": "someone", "year": 2025 }`.
+  - JWT token (if required) can be set via the **Authorize** button (Bearer token).
+
+### Using Postman
+
+1. **Auth Service**:
+
+   - **POST** `http://localhost:5000/api/auth/login`
+   - In the Body → Raw → JSON:
+     ```json
+     {
+       "username": "test",
+       "password": "test"
+     }
+     ```
+   - Copy the token in the response.
+
+2. **Book Service**:
+   - **GET** `http://localhost:5001/api/books`
+   - Add a header:
+     ```
+     Authorization: Bearer <your JWT token here>
+     ```
+   - Send the request.
+
+---
+
+## Kubernetes Deployment
+
+### Minikube Setup
+
+1. Install **Minikube** if needed: [Minikube Installation Guide](https://minikube.sigs.k8s.io/docs/start/)
+2. Install **kubectl**: [kubectl Installation Guide](https://kubernetes.io/docs/tasks/tools/)
+3. Start Minikube:
+
+```bash
+   minikube start
+```
+
+### Using the Deployment Scripts
+
+1. **deploy_postgres_to_minikube.ps1**
+
+   - Deletes old PostgreSQL resources
+   - Applies `postgres-configmap.yaml` and `postgres-deployment.yaml`
+   - Run it in **PowerShell**:
+     ```powershell
+     ./deploy_postgres_to_minikube.ps1
+     ```
+
+2. **deploy_services_to_minikube.ps1**
+
+   - Builds/pushes auth-service & book-service Docker images to your minikube environment
+   - Applies `auth-service-deployment.yaml` and `book-service-deployment.yaml`
+   - Then shows pods/services
+
+   ```powershell
+   ./deploy_services_to_minikube.ps1
+   ```
+
+3. **Check**:
+
+   ```powershell
+   kubectl get pods
+   kubectl get svc
+   minikube service list
+   ```
+
+4. **Test** with Postman or cURL:
+   - For example: `http://127.0.0.1:<randomPort>/api/auth/login`
+
+---
+
+## CI/CD
+
+You can integrate this with a CI/CD pipeline (e.g., **GitHub Actions**). Each microservice can have its own workflow for testing, building, and pushing to Docker Hub.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are welcome!
 
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature/your-feature
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add some feature"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature/your-feature
-   ```
-5. Open a pull request.
+1. **Fork** the repo
+2. **Create** a feature branch
+3. **Commit** & push your changes
+4. **Open** a pull request
 
 ---
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+```
+
+```
