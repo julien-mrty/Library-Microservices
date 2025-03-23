@@ -182,20 +182,7 @@ From the **root folder** (where `docker-compose.yml` is):
    - **Auth**: [http://localhost:5000](http://localhost:5000)
    - **Book**: [http://localhost:5001](http://localhost:5001)
 
-### Alternative: Pulling Images from Docker Hub
 
-If you prefer pre-built images (from user `77771603` on Docker Hub):
-
-```bash
-docker pull 77771603/auth-service
-docker pull 77771603/book-service
-
-# Run them locally
-docker run -p 5000:5000 77771603/auth-service
-docker run -p 5001:5001 77771603/book-service
-```
-
----
 
 ## API Documentation
 
