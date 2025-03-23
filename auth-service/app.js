@@ -10,7 +10,6 @@ app.use(cookieParser());
 
 // Initialize OpenAPI generator BEFORE declaring routes
 oasGenerator.init(app, (spec) => {
-
   // Switch from Swagger 2 to OpenAPI 3
   if (spec.swagger) {
     delete spec.swagger;
@@ -23,15 +22,15 @@ oasGenerator.init(app, (spec) => {
     bearerAuth: {
       type: 'http',
       scheme: 'bearer',
-      bearerFormat: 'JWT'
-    }
+      bearerFormat: 'JWT',
+    },
   };
 
   // Apply the security scheme globally to all endpoints (optional)
   spec.security = [
     {
-      bearerAuth: []
-    }
+      bearerAuth: [],
+    },
   ];
   // ------------------------------------------
 
@@ -48,12 +47,12 @@ oasGenerator.init(app, (spec) => {
             type: 'object',
             properties: {
               username: { type: 'string' },
-              password: { type: 'string' }
+              password: { type: 'string' },
             },
-            required: ['username', 'password']
-          }
-        }
-      }
+            required: ['username', 'password'],
+          },
+        },
+      },
     };
   }
 
@@ -67,12 +66,12 @@ oasGenerator.init(app, (spec) => {
             type: 'object',
             properties: {
               username: { type: 'string' },
-              password: { type: 'string' }
+              password: { type: 'string' },
             },
-            required: ['username', 'password']
-          }
-        }
-      }
+            required: ['username', 'password'],
+          },
+        },
+      },
     };
   }
 
@@ -80,7 +79,7 @@ oasGenerator.init(app, (spec) => {
   if (authPaths['/api/auth/verify-token']?.get) {
     authPaths['/api/auth/verify-token'].get.responses = {
       200: { description: 'Token is valid' },
-      401: { description: 'Invalid or expired token' }
+      401: { description: 'Invalid or expired token' },
     };
   }
 

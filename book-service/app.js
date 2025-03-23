@@ -8,15 +8,12 @@ app.use(express.json());
 
 // Initialize OpenAPI generator BEFORE routes are declared
 oasGenerator.init(app, (spec) => {
-
-  
   if (spec.swagger) {
     delete spec.swagger;
   }
-  
+
   spec.openapi = '3.0.0';
 
-  
   spec.components = spec.components || {};
   spec.components.securitySchemes = {
     bearerAuth: {
@@ -25,7 +22,7 @@ oasGenerator.init(app, (spec) => {
       bearerFormat: 'JWT',
     },
   };
-  
+
   spec.security = [
     {
       bearerAuth: [],
@@ -33,7 +30,6 @@ oasGenerator.init(app, (spec) => {
   ];
   // ----------------------------
 
- 
   const bookPaths = spec.paths || {};
   if (bookPaths['/api/books']?.post) {
     bookPaths['/api/books'].post.requestBody = {
@@ -45,12 +41,12 @@ oasGenerator.init(app, (spec) => {
             properties: {
               title: { type: 'string' },
               author: { type: 'string' },
-              year: { type: 'integer' }
+              year: { type: 'integer' },
             },
-            required: ['title', 'author', 'year']
-          }
-        }
-      }
+            required: ['title', 'author', 'year'],
+          },
+        },
+      },
     };
   }
 
